@@ -1,5 +1,4 @@
 # dev
-.vercel/
 .yarn/
 !.yarn/releases
 .vscode/*
