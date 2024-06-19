@@ -1,12 +1,12 @@
 {
-  "name": "actions-adapter",
+  "name": "actions-examples",
   "scripts": {
     "dev": "tsx watch src/app/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.3",
-    "@solana/web3.js": "^1.91.8",
-    "hono": "^4.4.7"
+    "hono": "^4.4.7",
+    "@solana/web3.js": "^1.91.8"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

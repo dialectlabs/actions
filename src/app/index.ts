@@ -4,7 +4,7 @@ import donate from './api/donate/route';
 
 const app = new Hono();
 
-app.route('/donate', donate);
+app.route('/api/donate', donate);
 
 serve({
   fetch: app.fetch,

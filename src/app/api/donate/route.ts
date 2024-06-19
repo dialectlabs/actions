@@ -1,10 +1,12 @@
 import { getDonateInfo, prepareDonateTransaction } from './utils';
 import {
-  ActionsSpecGetResponse, ActionsSpecPostRequestBody,
+  ActionsSpecGetResponse,
+  ActionsSpecPostRequestBody,
   ActionsSpecPostResponse
-} from '../../actions-spec';
+} from '../../spec/actions-spec';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { Hono } from 'hono';
+import { commonHeaders } from '../../utils/http-utils';
 
 const DONATION_DESTINATION_WALLET =
   '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
@@ -28,7 +30,7 @@ app.get('/', (c) => {
           href: `/api/donate/${amount}`
         })),
         {
-          href: `https://actions.dialect.to/api/donate/{${amountParameterName}}`,
+          href: `/api/donate/{${amountParameterName}}`,
           label: 'Donate',
           parameters: [
             {
@@ -41,7 +43,7 @@ app.get('/', (c) => {
     }
   };
 
-  return Response.json(response);
+  return c.json(response, 200, commonHeaders);
 });
 
 app.get('/:amount', (c) => {
@@ -53,7 +55,7 @@ app.get('/:amount', (c) => {
     title,
     description
   };
-  return c.json(response);
+  return c.json(response, 200, commonHeaders);
 });
 
 app.post('/:amount?', async (c) => {
@@ -69,7 +71,7 @@ app.post('/:amount?', async (c) => {
   const response: ActionsSpecPostResponse = {
     transaction: Buffer.from(transaction.serialize()).toString('base64')
   };
-  return Response.json(response);
+  return c.json(response, 200, commonHeaders);
 });
 
 export default app;

@@ -3,7 +3,7 @@ import {
   SystemProgram,
   VersionedTransaction,
 } from '@solana/web3.js';
-import { prepareTransaction } from '../../transaction-utils';
+import { prepareTransaction } from '../../utils/transaction-utils';
 
 export function getDonateInfo() {
   const icon =
