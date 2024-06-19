@@ -1,1 +1,4 @@
-# actions-adapter
+```
+npm install
+npm run start
+```
