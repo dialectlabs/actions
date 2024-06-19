@@ -1,13 +1,15 @@
 {
-  "name": "actions-adapterx",
+  "name": "actions-examples",
   "scripts": {
-    "start": "vercel dev",
-    "deploy": "vercel"
+    "dev": "tsx watch src/app/index.ts"
   },
   "dependencies": {
-    "hono": "^4.4.7"
+    "@hono/node-server": "^1.11.3",
+    "hono": "^4.4.7",
+    "@solana/web3.js": "^1.91.8"
   },
   "devDependencies": {
-    "vercel": "^32.4.1"
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
   }
 }
