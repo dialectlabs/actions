@@ -5,17 +5,25 @@ import {
   ActionsSpecPostResponse
 } from '../../spec/actions-spec';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { Hono } from 'hono';
-import { commonHeaders } from '../../utils/http-utils';
+import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
+import {
+  actionSpecOpenApiPostRequestBody,
+  actionsSpecOpenApiGetResponse, actionsSpecOpenApiPostResponse
+} from '../../openapi';
 
 const DONATION_DESTINATION_WALLET =
   '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
 const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
 const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
-const app = new Hono();
+const app = new OpenAPIHono();
 
-app.get('/', (c) => {
+app.openapi(createRoute({
+  method: 'get',
+  path: '/',
+  tags: ['Donate'],
+  responses: actionsSpecOpenApiGetResponse
+}), (c) => {
   const { icon, title, description } = getDonateInfo();
   const amountParameterName = 'amount';
   const response: ActionsSpecGetResponse = {
@@ -43,10 +51,27 @@ app.get('/', (c) => {
     }
   };
 
-  return c.json(response, 200, commonHeaders);
+  return c.json(response, 200);
 });
 
-app.get('/:amount', (c) => {
+app.openapi(createRoute({
+  method: 'get',
+  path: '/{amount}',
+  tags: ['Donate'],
+  request: {
+    params: z.object({
+      amount: z.string().openapi({
+        param: {
+          name: 'amount',
+          in: 'path'
+        },
+        type: 'number',
+        example: '1'
+      })
+    })
+  },
+  responses: actionsSpecOpenApiGetResponse
+}), (c) => {
   const amount = c.req.param('amount');
   const { icon, title, description } = getDonateInfo();
   const response: ActionsSpecGetResponse = {
@@ -55,10 +80,29 @@ app.get('/:amount', (c) => {
     title,
     description
   };
-  return c.json(response, 200, commonHeaders);
+  return c.json(response, 200);
 });
 
-app.post('/:amount?', async (c) => {
+app.openapi(createRoute({
+  method: 'post',
+  path: '/{amount}',
+  tags: ['Donate'],
+  request: {
+    params: z.object({
+      amount: z.string().optional().openapi({
+        param: {
+          name: 'amount',
+          in: 'path',
+          required: false
+        },
+        type: 'number',
+        example: '1'
+      })
+    }),
+    body: actionSpecOpenApiPostRequestBody
+  },
+  responses: actionsSpecOpenApiPostResponse
+}), async (c) => {
   const amount = c.req.param('amount') ?? DEFAULT_DONATION_AMOUNT_SOL.toString();
   const { account } = (await c.req.json()) as ActionsSpecPostRequestBody;
 
@@ -71,7 +115,7 @@ app.post('/:amount?', async (c) => {
   const response: ActionsSpecPostResponse = {
     transaction: Buffer.from(transaction.serialize()).toString('base64')
   };
-  return c.json(response, 200, commonHeaders);
+  return c.json(response, 200);
 });
 
 export default app;

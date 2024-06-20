@@ -5,8 +5,11 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.11.3",
+    "@hono/swagger-ui": "^0.3.0",
+    "@hono/zod-openapi": "^0.14.5",
     "hono": "^4.4.7",
-    "@solana/web3.js": "^1.91.8"
+    "@solana/web3.js": "^1.91.8",
+    "@jup-ag/api": "^6.0.23"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
