@@ -1,10 +1,8 @@
-// GET
 export interface SolanaPaySpecGetResponse {
   label: string;
   icon: string;
 }
 
-// POST
 export interface SolanaPaySpecPostRequestBody {
   account: string; // transaction signer public key
 }

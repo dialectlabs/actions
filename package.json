@@ -1,18 +1,25 @@
 {
-  "name": "actions-examples",
+  "name": "@dialectlabs/actions",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dialectlabs/actions"
+  },
   "scripts": {
-    "dev": "tsx watch src/app/index.ts"
+    "dev": "tsx watch examples/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.3",
     "@hono/swagger-ui": "^0.3.0",
     "@hono/zod-openapi": "^0.14.5",
-    "hono": "^4.4.7",
+    "@jup-ag/api": "^6.0.23",
     "@solana/web3.js": "^1.91.8",
-    "@jup-ag/api": "^6.0.23"
+    "hono": "^4.4.7"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.1",
+    "prettier": "^3.3.2"
   }
 }
