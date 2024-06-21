@@ -1,6 +1,6 @@
 # @dialectlabs/actions
 
-This repository contains reference implementations for Solana Actions using [Hono](https://hono.dev/).
+This repository contains reference implementations of Solana Actions using [Hono](https://hono.dev/).
 
 ## Getting Started
 

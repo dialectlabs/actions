@@ -1,7 +1,8 @@
-import { createJupiterApiClient, QuoteGetRequest, SwapPostRequest } from '@jup-ag/api';
-
-export const jupiterLogo =
-  'https://ucarecdn.com/09c80208-f27c-45dd-b716-75e1e55832c4/-/preview/1000x981/-/quality/smart/-/format/auto/';
+import {
+  createJupiterApiClient,
+  QuoteGetRequest,
+  SwapPostRequest,
+} from '@jup-ag/api';
 
 export interface JupiterTokenPriceData {
   id: string;
@@ -11,7 +12,6 @@ export interface JupiterTokenPriceData {
   price: number;
 }
 
-// Interface for the API response structure
 interface JupiterPriceApiResponse {
   data: Record<string, JupiterTokenPriceData>;
   timeTaken: number;
@@ -26,8 +26,6 @@ export interface JupiterTokenMetadata {
   logoURI: string;
   tags: string[];
 }
-
-// Function to get token exchange rates
 
 export const createJupiterApi = () => {
   const jupiterApi = createJupiterApiClient();
@@ -54,7 +52,7 @@ export const createJupiterApi = () => {
     const response = await fetch(url);
     const parsedResponse = (await response.json()) as JupiterPriceApiResponse;
     return parsedResponse.data;
-  }
+  };
 
   const quoteGet = async (request: QuoteGetRequest) => {
     return await jupiterApi.quoteGet(request);
@@ -94,13 +92,30 @@ export const createJupiterApi = () => {
     }
   };
 
+  const lookupToken = async (
+    token: string | null,
+  ): Promise<JupiterTokenMetadata | null> => {
+    if (!token) {
+      return null;
+    }
+    const tokenLowercase = token.toLowerCase().trim();
+    const jupiterTokenMetadata = await getStrictList();
+
+    const jupTokenMetaDatum = jupiterTokenMetadata.find(
+      (token) =>
+        token.symbol?.toLowerCase() === tokenLowercase ||
+        token.address?.toLowerCase() === tokenLowercase,
+    );
+
+    return jupTokenMetaDatum ?? null;
+  };
+
   return {
     getTokenPricesInUsdc,
     getTokenPriceInSol,
     quoteGet,
     swapPost,
-    getTokenList,
-    getStrictList,
+    lookupToken,
   };
 };
 
