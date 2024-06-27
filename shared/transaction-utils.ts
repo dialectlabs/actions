@@ -1,19 +1,10 @@
 import {
-  clusterApiUrl, Connection,
   PublicKey,
   TransactionInstruction,
   TransactionMessage,
   VersionedTransaction
 } from '@solana/web3.js';
-
-const environment = process.env.ENVIRONMENT || 'development';
-
-const rpcUrl =
-  environment === 'production'
-    ? process.env.RPC_URL || clusterApiUrl('mainnet-beta')
-    : process.env.RPC_URL || clusterApiUrl('devnet');
-
-export const connection = new Connection(rpcUrl);
+import { connection } from './connection';
 
 export async function prepareTransaction(
   instructions: TransactionInstruction[],

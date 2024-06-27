@@ -1,6 +1,10 @@
 import { serve } from '@hono/node-server';
 import donate from './donate/route';
 import jupiterSwap from './jupiter-swap/route';
+import heliusStake from './helius/stake/route';
+import sanctumTrade from './sanctum/trade/route';
+import tensorBuyFloor from './tensor/buy-floor/route';
+import meteoraSwap from './meteora/swap/route';
 import { cors } from 'hono/cors';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
@@ -11,6 +15,10 @@ app.use('/*', cors());
 // <--Actions-->
 app.route('/api/donate', donate);
 app.route('/api/jupiter/swap', jupiterSwap);
+app.route('/api/helius/stake', heliusStake);
+app.route('/api/sanctum/trade', sanctumTrade);
+app.route('/api/tensor/buy-floor', tensorBuyFloor);
+app.route('/api/meteora/swap', meteoraSwap);
 // </--Actions-->
 
 app.doc('/doc', {
