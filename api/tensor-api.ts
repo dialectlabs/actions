@@ -140,6 +140,8 @@ interface ListingsResponse {
   page: Page;
 }
 
+const TENSOR_API_KEY = "PASTE_YOUR_KEY_HERE";
+
 // 0b77397c-3600-4458-a579-72bd20bf810e
 // drip_metaverse_melodies
 export async function getNftInfo(
@@ -150,7 +152,7 @@ export async function getNftInfo(
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'x-tensor-api-key': process.env.SECRET_TENSOR_API_KEY!,
+        'x-tensor-api-key': TENSOR_API_KEY,
       },
     });
 
@@ -168,7 +170,7 @@ export async function getListingsByCollection(collId: string) {
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'x-tensor-api-key': process.env.SECRET_TENSOR_API_KEY!,
+        'x-tensor-api-key': TENSOR_API_KEY,
       },
     },
   ).then((response) => response.json());
@@ -186,7 +188,7 @@ export async function findCollectionBySlug(
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'x-tensor-api-key': process.env.SECRET_TENSOR_API_KEY!,
+        'x-tensor-api-key': TENSOR_API_KEY,
       },
     },
   ).then((response) => response.json());
@@ -214,7 +216,7 @@ export async function getNftBuyTransaction({
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'x-tensor-api-key': process.env.SECRET_TENSOR_API_KEY!,
+        'x-tensor-api-key': TENSOR_API_KEY,
       },
     });
 
