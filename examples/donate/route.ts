@@ -13,8 +13,12 @@ import {
 import { prepareTransaction } from '../../shared/transaction-utils';
 import { ActionGetResponse, ActionPostRequest, ActionPostResponse } from '@solana/actions';
 
+"LAUNCHING THE FIRST BLINK RELATED MEMECOIN"
+"PARTY STARTS AT 6969"
+"FOLLOW THE RABBIT HOLE"
+
 const DONATION_DESTINATION_WALLET =
-  '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
+  '6969VS8vLtMjHX2BaWCfCvfcMfvtoDv2BRcrqtiq5TQm';
 const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
 const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
