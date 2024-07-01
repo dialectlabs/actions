@@ -30,6 +30,7 @@ export interface TensorNft {
     source: string;
     blockNumber: string;
   };
+  slugDisplay: string;
 }
 
 interface CollectionStats {
@@ -77,6 +78,7 @@ interface Collection {
   createdAt: string;
   updatedAt: string;
   firstListDate: string;
+  sellRoyaltyFeeBPS: number;
 }
 
 interface CollectionResponse {
@@ -147,7 +149,7 @@ interface ListingsResponse {
   page: Page;
 }
 
-const TENSOR_API_KEY = "PASTE_YOUR_KEY_HERE";
+const TENSOR_API_KEY = "api-key-removed-for-security-reasons";
 
 // 0b77397c-3600-4458-a579-72bd20bf810e
 // drip_metaverse_melodies

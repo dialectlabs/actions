@@ -50,18 +50,19 @@ app.openapi(createRoute({
     name,
     imageUri,
     listing,
+    slugDisplay
   } = nftInfo;
 
-  const title = `${slug} #${name}`;
+  const title = `${name}`;
 
-  const collection = await findCollectionBySlug(slug);
+  const collection = await findCollectionBySlug(slugDisplay);
 
   if (!collection) {
     throw new Error(`Collection ${slug} not found`);
   }
 
   const actions: any[] = [{
-    href: `/${nftMint}/{amount}`,
+    href: `/api/tensor/bid-nft/${nftMint}/{amount}`,
     label: 'Make Offer',
     parameters: [
       {
@@ -71,13 +72,13 @@ app.openapi(createRoute({
     ],
   }];
 
-  if (listing) {
+  if (listing.price) {
     const uiPrice = formatTokenAmount(
       parseInt(listing.price) / LAMPORTS_PER_SOL,
     );
 
     actions.unshift({
-      href: `/${nftMint}`,
+      href: `/api/tensor/bid-nft/${nftMint}`,
       label: `Buy Now (${uiPrice} SOL)`,
     });
   }
@@ -141,11 +142,13 @@ app.openapi(createRoute({
       slug,
       name,
       imageUri,
+      listing,
+      slugDisplay
     } = nftInfo;
   
-    const title = `${slug} #${name}`;
-
-    const collection = await findCollectionBySlug(slug);
+    const title = `${name}`;
+  
+    const collection = await findCollectionBySlug(slugDisplay);
 
     if (!collection) {
       throw new Error(`Collection ${slug} not found`);
@@ -218,8 +221,14 @@ app.openapi(createRoute({
       );
     }
 
+    const collection = await findCollectionBySlug(nftInfo.slugDisplay);
+
+    if (!collection) {
+      throw new Error(`Collection ${nftInfo.slugDisplay} not found`);
+    }
+
     const amount = parseFloat(rawAmount) * LAMPORTS_PER_SOL;
-    const transaction = await createBidNftTransaction(nftMint, account, amount, nftInfo.royaltyBps);
+    const transaction = await createBidNftTransaction(nftMint, account, amount, collection.sellRoyaltyFeeBPS);
 
     if (!transaction) {
       throw new Error('Failed to create transaction');
@@ -294,7 +303,13 @@ app.openapi(createRoute({
       );
     }
 
-    const transaction = await createBuyNftTransaction(nftMint, account, nftInfo.listing.seller, nftInfo.royaltyBps, nftInfo.listing.price);
+    const collection = await findCollectionBySlug(nftInfo.slugDisplay);
+
+    if (!collection) {
+      throw new Error(`Collection ${nftInfo.slugDisplay} not found`);
+    }
+
+    const transaction = await createBuyNftTransaction(nftMint, account, nftInfo.listing.seller, collection.sellRoyaltyFeeBPS, nftInfo.listing.price);
 
     if (!transaction) {
       throw new Error('Failed to create transaction');
