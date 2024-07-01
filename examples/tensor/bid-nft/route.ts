@@ -59,7 +59,7 @@ app.openapi(
     if (!collection) {
       return c.json(
         {
-          message: `Collection ${nft.slug} not found`,
+          message: `Collection ${nft.slugDisplay} not found`,
         } satisfies ActionError,
         {
           status: 422,
@@ -161,7 +161,7 @@ app.openapi(
     if (!collection) {
       return c.json(
         {
-          message: `Collection ${nft.slug} not found`,
+          message: `Collection ${nft.slugDisplay} not found`,
         } satisfies ActionError,
         {
           status: 422,
@@ -220,7 +220,7 @@ app.openapi(
       if (!collection) {
         return c.json(
           {
-            message: `Collection ${nft.slug} not found`,
+            message: `Collection ${nft.slugDisplay} not found`,
           } satisfies ActionError,
           {
             status: 422,
@@ -313,7 +313,7 @@ app.openapi(
       if (!collection) {
         return c.json(
           {
-            message: `Collection ${nft.slug} not found`,
+            message: `Collection ${nft.slugDisplay} not found`,
           } satisfies ActionError,
           {
             status: 422,
