@@ -7,7 +7,7 @@ const TENSOR_FEE_BPS = 150; // both for NFT and cNFT
 export async function createBidNftTransaction(
     mintAddress: string,
     ownerAddress: string,
-    price: string,
+    price: number,
     royaltyBps: number,
 ): Promise<string | null> {
     const blockhash = await connection
@@ -15,7 +15,7 @@ export async function createBidNftTransaction(
         .then((res) => res.blockhash);
 
     const totalPrice = getTotalPrice(
-        parseInt(price, 10),
+        price,
         royaltyBps,
     );
     return getNftBidTransaction({

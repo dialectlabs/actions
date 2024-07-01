@@ -1,7 +1,7 @@
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse } from '@solana/actions';
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import { getNftInfo } from '../../../api/tensor-api';
+import { findCollectionBySlug, getNftInfo } from '../../../api/tensor-api';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
 import {
   actionSpecOpenApiPostRequestBody,
@@ -54,6 +54,12 @@ app.openapi(createRoute({
 
   const title = `${slug} #${name}`;
 
+  const collection = await findCollectionBySlug(slug);
+
+  if (!collection) {
+    throw new Error(`Collection ${slug} not found`);
+  }
+
   const actions: any[] = [{
     href: `/${nftMint}/{amount}`,
     label: 'Make Offer',
@@ -80,7 +86,7 @@ app.openapi(createRoute({
     icon: imageUri,
     label: 'Tensor Trade',
     title,
-    description: 'Fock it',
+    description: collection.description,
     links: {
       actions,
     },
@@ -109,7 +115,7 @@ app.openapi(createRoute({
             in: 'path',
           },
           type: 'number',
-          example: '1',
+          example: '1.35',
         }),
       }),
     },
@@ -139,11 +145,17 @@ app.openapi(createRoute({
   
     const title = `${slug} #${name}`;
 
+    const collection = await findCollectionBySlug(slug);
+
+    if (!collection) {
+      throw new Error(`Collection ${slug} not found`);
+    }
+
     const response: ActionGetResponse = {
       icon: imageUri,
       label: `${amount} SOL`,
       title,
-      description: 'Fock it',
+      description: collection.description,
     };
     return c.json(response, 200);
   },
@@ -177,7 +189,7 @@ app.openapi(createRoute({
   responses: actionsSpecOpenApiPostResponse,
 }), async (c) => {
   const nftMint = c.req.param('nftMint');
-  const amount = c.req.param('amount');
+  const rawAmount = c.req.param('amount'); // something like 1.35 SOL
 
   try {
     const { account } = (await c.req.json()) as ActionPostRequest;
@@ -206,6 +218,7 @@ app.openapi(createRoute({
       );
     }
 
+    const amount = parseFloat(rawAmount) * LAMPORTS_PER_SOL;
     const transaction = await createBidNftTransaction(nftMint, account, amount, nftInfo.royaltyBps);
 
     if (!transaction) {
