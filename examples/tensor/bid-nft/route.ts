@@ -32,61 +32,61 @@ app.openapi(createRoute({
 }), async (c) => {
   const nftMint = c.req.param('nftMint');
 
-	const nftInfo = await getNftInfo(nftMint);
+  const nftInfo = await getNftInfo(nftMint);
 
-	if (!nftInfo) {
-		return c.json(
-			{
-				message: `NFT ${nftMint} not found`,
-			} satisfies ActionError,
-			{
-				status: 422,
-			},
-		);
-	}
+  if (!nftInfo) {
+    return c.json(
+      {
+        message: `NFT ${nftMint} not found`,
+      } satisfies ActionError,
+      {
+        status: 422,
+      },
+    );
+  }
 
-	const {
-		slug,
-		name,
-		imageUri,
-		listing,
-	} = nftInfo;
+  const {
+    slug,
+    name,
+    imageUri,
+    listing,
+  } = nftInfo;
 
-	const title = `${slug} #${name}`;
+  const title = `${slug} #${name}`;
 
-	const actions: any[] = [{
-		href: `/${nftMint}/{amount}`,
-		label: 'Make Offer',
-		parameters: [
-			{
-				name: 'amount',
-				label: 'Enter a custom SOL amount',
-			},
-		],
-	}];
+  const actions: any[] = [{
+    href: `/${nftMint}/{amount}`,
+    label: 'Make Offer',
+    parameters: [
+      {
+        name: 'amount',
+        label: 'Enter a custom SOL amount',
+      },
+    ],
+  }];
 
-	if (listing) {
+  if (listing) {
     const uiPrice = formatTokenAmount(
       parseInt(listing.price) / LAMPORTS_PER_SOL,
     );
 
-		actions.unshift({
-			href: `/${nftMint}`,
-			label: `Buy Now (${uiPrice} SOL)`,
-		});
-	}
+    actions.unshift({
+      href: `/${nftMint}`,
+      label: `Buy Now (${uiPrice} SOL)`,
+    });
+  }
 
-	const response: ActionGetResponse = {
-		icon: imageUri,
-		label: 'Tensor Trade',
-		title,
-		description: 'Fock it',
-		links: {
-			actions,
-		},
-	};
+  const response: ActionGetResponse = {
+    icon: imageUri,
+    label: 'Tensor Trade',
+    title,
+    description: 'Fock it',
+    links: {
+      actions,
+    },
+  };
 
-	return c.json(response, 200);
+  return c.json(response, 200);
 });
 
 app.openapi(createRoute({
@@ -95,14 +95,14 @@ app.openapi(createRoute({
     tags: ['Tensor Bid NFT'],
     request: {
       params: z.object({
-				nftMint: z.string().openapi({
-					param: {
-						name: 'nftMint',
-						in: 'path',
-					},
-					type: 'string',
-					example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
-				}),
+        nftMint: z.string().openapi({
+          param: {
+            name: 'nftMint',
+            in: 'path',
+          },
+          type: 'string',
+          example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
+        }),
         amount: z.string().openapi({
           param: {
             name: 'amount',
@@ -117,27 +117,27 @@ app.openapi(createRoute({
   }),
   async (c) => {
     const amount = c.req.param('amount');
-		const nftMint = c.req.param('nftMint');
+    const nftMint = c.req.param('nftMint');
     const nftInfo = await getNftInfo(nftMint);
 
-		if (!nftInfo) {
-			return c.json(
-				{
-					message: `NFT ${nftMint} not found`,
-				} satisfies ActionError,
-				{
-					status: 422,
-				},
-			);
-		}
+    if (!nftInfo) {
+      return c.json(
+        {
+          message: `NFT ${nftMint} not found`,
+        } satisfies ActionError,
+        {
+          status: 422,
+        },
+      );
+    }
 
-		const {
-			slug,
-			name,
-			imageUri,
-		} = nftInfo;
-	
-		const title = `${slug} #${name}`;
+    const {
+      slug,
+      name,
+      imageUri,
+    } = nftInfo;
+  
+    const title = `${slug} #${name}`;
 
     const response: ActionGetResponse = {
       icon: imageUri,
@@ -163,74 +163,74 @@ app.openapi(createRoute({
         type: 'string',
         example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
       }),
-	    amount: z.string().openapi({
-		    param: {
-					name: 'amount',
-					in: 'path',
-				},
-				type: 'number',
-				example: '1',
+      amount: z.string().openapi({
+        param: {
+          name: 'amount',
+          in: 'path',
+        },
+        type: 'number',
+        example: '1',
       }),
     }),
     body: actionSpecOpenApiPostRequestBody,
   },
   responses: actionsSpecOpenApiPostResponse,
 }), async (c) => {
-	const nftMint = c.req.param('nftMint');
-	const amount = c.req.param('amount');
+  const nftMint = c.req.param('nftMint');
+  const amount = c.req.param('amount');
 
-	try {
-		const { account } = (await c.req.json()) as ActionPostRequest;
-		
-		const nftInfo = await getNftInfo(nftMint);
-		
-		if (!nftInfo) {
-			return c.json(
-				{
-					message: `NFT ${nftMint} not found`,
-				} satisfies ActionError,
-				{
-					status: 422,
-				},
-			);
-		}
+  try {
+    const { account } = (await c.req.json()) as ActionPostRequest;
+    
+    const nftInfo = await getNftInfo(nftMint);
+    
+    if (!nftInfo) {
+      return c.json(
+        {
+          message: `NFT ${nftMint} not found`,
+        } satisfies ActionError,
+        {
+          status: 422,
+        },
+      );
+    }
 
-		if (!nftInfo.listing) {
-			return c.json(
-				{
-					message: `NFT ${nftMint} is not listed`,
-				} satisfies ActionError,
-				{
-					status: 422,
-				},
-			);
-		}
+    if (!nftInfo.listing) {
+      return c.json(
+        {
+          message: `NFT ${nftMint} is not listed`,
+        } satisfies ActionError,
+        {
+          status: 422,
+        },
+      );
+    }
 
-		const transaction = await createBidNftTransaction(nftMint, account, amount, nftInfo.royaltyBps);
+    const transaction = await createBidNftTransaction(nftMint, account, amount, nftInfo.royaltyBps);
 
-		if (!transaction) {
+    if (!transaction) {
       throw new Error('Failed to create transaction');
     }
 
-		const response: ActionPostResponse = {
-			transaction: transaction,
-		};
+    const response: ActionPostResponse = {
+      transaction: transaction,
+    };
 
-		return c.json(response);
-	} catch (e) {
-		console.error(
-			`Failed to prepare bid transaction for ${nftMint}`,
-			e,
-		);
-		return c.json(
-			{
-				message: `Failed to prepare transaction`,
-			} satisfies ActionError,
-			{
-				status: 500,
-			},
-		);
-	}
+    return c.json(response);
+  } catch (e) {
+    console.error(
+      `Failed to prepare bid transaction for ${nftMint}`,
+      e,
+    );
+    return c.json(
+      {
+        message: `Failed to prepare transaction`,
+      } satisfies ActionError,
+      {
+        status: 500,
+      },
+    );
+  }
 });
 
 app.openapi(createRoute({
@@ -256,38 +256,38 @@ app.openapi(createRoute({
 
   try {
     const { account } = (await c.req.json()) as ActionPostRequest;
-		
-		const nftInfo = await getNftInfo(nftMint);
-		
-		if (!nftInfo) {
-			return c.json(
-				{
-					message: `NFT ${nftMint} not found`,
-				} satisfies ActionError,
-				{
-					status: 422,
-				},
-			);
-		}
+    
+    const nftInfo = await getNftInfo(nftMint);
+    
+    if (!nftInfo) {
+      return c.json(
+        {
+          message: `NFT ${nftMint} not found`,
+        } satisfies ActionError,
+        {
+          status: 422,
+        },
+      );
+    }
 
-		if (!nftInfo.listing) {
-			return c.json(
-				{
-					message: `NFT ${nftMint} is not listed`,
-				} satisfies ActionError,
-				{
-					status: 422,
-				},
-			);
-		}
+    if (!nftInfo.listing) {
+      return c.json(
+        {
+          message: `NFT ${nftMint} is not listed`,
+        } satisfies ActionError,
+        {
+          status: 422,
+        },
+      );
+    }
 
-		const transaction = await createBuyNftTransaction(nftMint, account, nftInfo.listing.seller, nftInfo.royaltyBps, nftInfo.listing.price);
+    const transaction = await createBuyNftTransaction(nftMint, account, nftInfo.listing.seller, nftInfo.royaltyBps, nftInfo.listing.price);
 
-		if (!transaction) {
+    if (!transaction) {
       throw new Error('Failed to create transaction');
     }
 
-		const response: ActionPostResponse = {
+    const response: ActionPostResponse = {
       transaction: transaction,
     };
 
