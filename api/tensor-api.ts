@@ -8,6 +8,13 @@ export interface GetNftBuyNowTxCommand {
   latestBlockhash: string;
 }
 
+export interface GetNftBidNowTxCommand {
+  mintAddress: string;
+  price: number;
+  ownerAddress: string;
+  latestBlockhash: string;
+}
+
 export interface TensorNft {
   onchainId: string;
   slug: string;
@@ -23,6 +30,7 @@ export interface TensorNft {
     source: string;
     blockNumber: string;
   };
+  slugDisplay: string;
 }
 
 interface CollectionStats {
@@ -140,7 +148,7 @@ interface ListingsResponse {
   page: Page;
 }
 
-const TENSOR_API_KEY = "PASTE_YOUR_KEY_HERE";
+const TENSOR_API_KEY = 'PASTE_YOUR_KEY_HERE';
 
 // 0b77397c-3600-4458-a579-72bd20bf810e
 // drip_metaverse_melodies
@@ -224,6 +232,38 @@ export async function getNftBuyTransaction({
 
     return buyNftResponse.txs[0]?.txV0
       ? Buffer.from(buyNftResponse.txs[0]?.txV0.data).toString('base64')
+      : null;
+  } catch (e) {
+    console.warn(e);
+    return null;
+  }
+}
+
+export async function getNftBidTransaction({
+  mintAddress,
+  ownerAddress,
+  price,
+  latestBlockhash,
+}: GetNftBidNowTxCommand) {
+  try {
+    const queryParams = new URLSearchParams();
+    queryParams.append('mint', mintAddress);
+    queryParams.append('owner', ownerAddress);
+    queryParams.append('price', price.toString());
+    queryParams.append('blockhash', latestBlockhash);
+
+    const fullUrl = `${baseUrl}/tx/bid?${queryParams.toString()}`;
+    const response = await fetch(fullUrl, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'x-tensor-api-key': TENSOR_API_KEY,
+      },
+    });
+
+    const bidNftResponse = await response.json();
+    return bidNftResponse.txs[0]?.txV0
+      ? Buffer.from(bidNftResponse.txs[0]?.txV0.data).toString('base64')
       : null;
   } catch (e) {
     console.warn(e);
