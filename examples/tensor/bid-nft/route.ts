@@ -67,19 +67,6 @@ app.openapi(
       );
     }
 
-    if (!nft.listing) {
-      return c.json({
-        icon: nft.imageUri,
-        label: 'Not Available',
-        title: nft.name,
-        description: collection.description,
-        disabled: true,
-        error: {
-          message: 'NFT has no listed',
-        },
-      } satisfies ActionGetResponse);
-    }
-
     const uiPrice = formatTokenAmount(
       parseInt(nft.listing.price) / LAMPORTS_PER_SOL,
     );
@@ -101,6 +88,10 @@ app.openapi(
         ],
       },
     ];
+
+    if (Object.keys(nft.listing).length === 0) {
+      actions.shift();
+    }
 
     return c.json({
       icon: nft.imageUri,
@@ -228,7 +219,7 @@ app.openapi(
         );
       }
 
-      if (!nft.listing) {
+      if (Object.keys(nft.listing).length === 0) {
         return c.json({
           icon: nft.imageUri,
           label: 'Not Available',
@@ -236,7 +227,7 @@ app.openapi(
           description: collection.description,
           disabled: true,
           error: {
-            message: 'NFT has no listed',
+            message: 'NFT is not listed',
           },
         } satisfies ActionGetResponse);
       }
@@ -319,19 +310,6 @@ app.openapi(
             status: 422,
           },
         );
-      }
-
-      if (!nft.listing) {
-        return c.json({
-          icon: nft.imageUri,
-          label: 'Not Available',
-          title: nft.name,
-          description: collection.description,
-          disabled: true,
-          error: {
-            message: 'NFT has no listed',
-          },
-        } satisfies ActionGetResponse);
       }
 
       const transaction = await createBidNftTransaction(
