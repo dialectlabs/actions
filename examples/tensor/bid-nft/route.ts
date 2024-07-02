@@ -171,7 +171,7 @@ app.openapi(
 
     return c.json({
       icon: nft.imageUri,
-      label: `${amount} SOL)`,
+      label: `${amount} SOL`,
       title: nft.name,
       description: collection.description,
     } satisfies ActionGetResponse);
