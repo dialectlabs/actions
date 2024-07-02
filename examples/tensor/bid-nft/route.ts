@@ -356,7 +356,6 @@ app.openapi(
         },
       );
     }
-    return c.json({});
   },
 );
 
