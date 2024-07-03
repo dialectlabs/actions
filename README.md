@@ -11,8 +11,9 @@ npm run dev
 ```
 
 ## Presets
-### Tensor Buy Floor
-* Place your api key to `TENSOR_API_KEY` constant in tensor-api.ts
+
+### Tensor Actions
+* Place your api key to `TENSOR_API_KEY` constant in /api/tensor-api.ts
 
 ## How To
 

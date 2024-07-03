@@ -2,7 +2,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse } from '@solana/actions';
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { findCollectionBySlug, getListingsByCollection } from '../../../api/tensor-api';
-import { createBuyNftTransaction } from './transaction-utils';
+import { createBuyNftTransaction } from '../transaction-utils';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
 import {
   actionSpecOpenApiPostRequestBody,
