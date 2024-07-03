@@ -11,7 +11,11 @@ npm run dev
 ```
 
 ## Presets
+
 ### Tensor Buy Floor
+* Place your api key to `TENSOR_API_KEY` constant in tensor-api.ts
+
+### Tensor Bid NFT
 * Place your api key to `TENSOR_API_KEY` constant in tensor-api.ts
 
 ## How To
