@@ -220,16 +220,14 @@ app.openapi(
       }
 
       if (Object.keys(nft.listing).length === 0) {
-        return c.json({
-          icon: nft.imageUri,
-          label: 'Not Available',
-          title: nft.name,
-          description: collection.description,
-          disabled: true,
-          error: {
+        return c.json(
+          {
             message: 'NFT is not listed',
+          } satisfies ActionError,
+          {
+            status: 422,
           },
-        } satisfies ActionGetResponse);
+        );
       }
 
       const transaction = await createBuyNftTransaction(nft, account);
