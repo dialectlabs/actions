@@ -81,7 +81,7 @@ app.openapi(
       },
     ];
 
-    if (nft.listing.price) {
+    if (nft.listing && nft.listing.price) {
       const uiPrice = formatTokenAmount(
         parseInt(nft.listing.price) / LAMPORTS_PER_SOL,
       );
