@@ -67,16 +67,8 @@ app.openapi(
       );
     }
 
-    const uiPrice = formatTokenAmount(
-      parseInt(nft.listing.price) / LAMPORTS_PER_SOL,
-    );
-
     const amountParameterName = 'amount';
     const actions: LinkedAction[] = [
-      {
-        href: `/api/tensor/bid-nft/${mintAddress}`,
-        label: `Buy Now (${uiPrice} SOL)`,
-      },
       {
         href: `/api/tensor/bid-nft/${mintAddress}/{${amountParameterName}}`,
         label: 'Make Offer',
@@ -89,13 +81,20 @@ app.openapi(
       },
     ];
 
-    if (Object.keys(nft.listing).length === 0) {
-      actions.shift();
+    if (nft.listing.price) {
+      const uiPrice = formatTokenAmount(
+        parseInt(nft.listing.price) / LAMPORTS_PER_SOL,
+      );
+
+      actions.unshift({
+        href: `/api/tensor/bid-nft/${mintAddress}`,
+        label: `Buy Now (${uiPrice} SOL)`,
+      });
     }
 
     return c.json({
       icon: nft.imageUri,
-      label: `Buy Now (${uiPrice} SOL)`,
+      label: 'Buy Now',
       title: nft.name,
       description: collection.description,
       links: {
@@ -207,11 +206,10 @@ app.openapi(
         );
       }
 
-      const collection = await findCollectionBySlug(nft.slugDisplay);
-      if (!collection) {
+      if (Object.keys(nft.listing).length === 0) {
         return c.json(
           {
-            message: `Collection ${nft.slugDisplay} not found`,
+            message: 'NFT is not listed',
           } satisfies ActionError,
           {
             status: 422,
@@ -219,10 +217,11 @@ app.openapi(
         );
       }
 
-      if (Object.keys(nft.listing).length === 0) {
+      const collection = await findCollectionBySlug(nft.slugDisplay);
+      if (!collection) {
         return c.json(
           {
-            message: 'NFT is not listed',
+            message: `Collection ${nft.slugDisplay} not found`,
           } satisfies ActionError,
           {
             status: 422,
