@@ -17,7 +17,7 @@ export async function createBuyNftTransaction(
 
   const totalPrice = getTotalPrice(
     parseInt(nft.listing.price, 10),
-    nft.royaltyBps,
+    nft.sellRoyaltyFeeBPS,
   );
   return getNftBuyTransaction({
     mintAddress: nft.onchainId,
@@ -37,7 +37,7 @@ export async function createBidNftTransaction(
     .getLatestBlockhash({ commitment: 'max' })
     .then((res) => res.blockhash);
 
-  const totalPrice = getTotalPrice(price, nft.royaltyBps);
+  const totalPrice = getTotalPrice(price, nft.sellRoyaltyFeeBPS);
 
   return getNftBidTransaction({
     mintAddress: nft.onchainId,

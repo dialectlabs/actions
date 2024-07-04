@@ -20,7 +20,7 @@ export interface TensorNft {
   slug: string;
   owner: string;
   imageUri: string;
-  royaltyBps: number;
+  sellRoyaltyFeeBPS: number;
   collName: string;
   name: string;
   listing: {
@@ -200,7 +200,6 @@ export async function findCollectionBySlug(
       },
     },
   ).then((response) => response.json());
-
   return collectionResponse.collections[0] ?? null;
 }
 
