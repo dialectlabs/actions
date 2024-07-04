@@ -30,7 +30,7 @@ export async function createBuyNftTransaction(
 
 export async function createBidNftTransaction(
   nft: TensorNft,
-  ownerAddress: string, // The placer of the bid
+  bidPlacer: string,
   price: number,
 ): Promise<string | null> {
   const blockhash = await connection
@@ -41,7 +41,7 @@ export async function createBidNftTransaction(
 
   return getNftBidTransaction({
     mintAddress: nft.onchainId,
-    ownerAddress: ownerAddress,
+    ownerAddress: bidPlacer,
     price: totalPrice,
     latestBlockhash: blockhash,
   });
