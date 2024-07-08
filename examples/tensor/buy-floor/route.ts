@@ -42,7 +42,9 @@ app.openapi(createRoute({
       },
     );
   }
-  const buyNowPriceNetFees = await getListingsByCollection(collection.collId)
+  const buyNowPriceNetFees = collection.stats.buyNowPriceNetFees 
+  ? parseInt(collection.stats.buyNowPriceNetFees)
+  : await getListingsByCollection(collection.collId)
     .then(resp => getTotalPrice(
       parseInt(resp.mints[0].listing.price), 
       collection.sellRoyaltyFeeBPS,
