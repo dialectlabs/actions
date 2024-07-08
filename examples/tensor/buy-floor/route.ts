@@ -2,7 +2,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { ActionError, ActionGetResponse, ActionPostRequest, ActionPostResponse } from '@solana/actions';
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { findCollectionBySlug, getListingsByCollection } from '../../../api/tensor-api';
-import { createBuyNftTransaction } from './transaction-utils';
+import { createBuyNftTransaction, getTotalPrice } from './transaction-utils';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
 import {
   actionSpecOpenApiPostRequestBody,
@@ -42,8 +42,14 @@ app.openapi(createRoute({
       },
     );
   }
-  const buyNowPriceNetFees = collection.stats.buyNowPriceNetFees;
-  if (!buyNowPriceNetFees) {
+  const buyNowPriceNetFees = await getListingsByCollection(collection.collId)
+    .then(resp => getTotalPrice(
+      parseInt(resp.mints[0].listing.price), 
+      collection.sellRoyaltyFeeBPS,
+      resp.mints[0].listing.source
+    ));
+  const numListed = collection.stats.numListed;
+  if (numListed < 1) {
     return c.json(
       {
         icon: collection.imageUri,
@@ -61,7 +67,7 @@ app.openapi(createRoute({
     );
   }
   const uiPrice = formatTokenAmount(
-    parseInt(buyNowPriceNetFees) / LAMPORTS_PER_SOL,
+    buyNowPriceNetFees / LAMPORTS_PER_SOL,
   );
   return c.json(
     {
@@ -109,7 +115,7 @@ app.openapi(createRoute({
     }
     const floorMint = (await getListingsByCollection(collection.collId))
       .mints[0];
-    if (!floorMint || !collection.stats.buyNowPriceNetFees) {
+    if (!floorMint) {
       return c.json(
         {
           message: `Collection has no listed NFTs`,
