@@ -1,45 +1,54 @@
 import { PublicKey, Transaction } from '@solana/web3.js';
 import { BN } from 'bn.js';
-import { TokenInfo } from '@solana/spl-token-registry';
+import { ENV, TokenInfo } from '@solana/spl-token-registry';
 import AmmImpl from '@mercurial-finance/dynamic-amm-sdk';
 import * as math from 'mathjs';
 import { connection } from '../shared/connection';
-import { createJupiterApi } from './jupiter-api';
+import { createJupiterApi, JupiterTokenMetadata } from './jupiter-api';
+
+interface Tokens {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  logoURI: string;
+  tags: string[];
+  daily_volume: number;
+}
 
 export const createSwapTx = async (
   userPublicKey: PublicKey,
   poolAddress: string,
   usdcAmount: string,
-  token: string,
+  tokenAMeta: Tokens,
+  tokenBMeta: Tokens,
+  inTokenMeta: Tokens,
   referrer: string | null,
 ): Promise<Transaction> => {
-  const poolData = await fetch(
-    `https://amm.meteora.ag/pools?address=${poolAddress}`,
-  ).then((res) => res.json());
-  const poolDetails = poolData[0];
-
-  const tokenList: TokenInfo[] = await fetch('https://token.jup.ag/all').then(
-    (res) => res.json(),
-  );
-  const tokenADetails = tokenList.find(
-    (item) => item && item.address === poolDetails.pool_token_mints[0],
-  )!;
-  const tokenBDetails = tokenList.find(
-    (item) => item && item.address === poolDetails.pool_token_mints[1],
-  )!;
+  const tokenAInfo: TokenInfo = {
+    address: tokenAMeta?.address ?? '',
+    chainId: ENV.MainnetBeta,
+    decimals: tokenAMeta?.decimals ?? 0,
+    name: tokenAMeta?.name ?? '',
+    symbol: tokenAMeta?.symbol ?? '',
+  };
+  const tokenBInfo: TokenInfo = {
+    address: tokenBMeta?.address ?? '',
+    chainId: ENV.MainnetBeta,
+    decimals: tokenBMeta?.decimals ?? 0,
+    name: tokenBMeta?.name ?? '',
+    symbol: tokenBMeta?.symbol ?? '',
+  };
 
   const ammPool = await AmmImpl.create(
     connection,
     new PublicKey(poolAddress),
-    tokenADetails,
-    tokenBDetails,
+    tokenAInfo,
+    tokenBInfo,
   );
 
-  const inTokenDetails =
-    tokenADetails.address === token ? tokenBDetails : tokenADetails;
-
   const { getTokenPricesInUsdc } = createJupiterApi();
-  const inToken = new PublicKey(inTokenDetails.address);
+  const inToken = new PublicKey(inTokenMeta.address);
   const prices = await getTokenPricesInUsdc([inToken.toString()]);
   const tokenPriceUsd = prices[inToken.toString()];
 
@@ -48,7 +57,7 @@ export const createSwapTx = async (
   const swapAmount = new BN(
     math
       .bignumber(amount)
-      .mul(10 ** inTokenDetails.decimals)
+      .mul(10 ** inTokenMeta.decimals)
       .floor()
       .toString(),
   );
@@ -68,26 +77,52 @@ export const createSwapTx = async (
   return swapTx;
 };
 
-export const getTokenPair = async (
+export const getTokenPairMetadata = async (
   poolAddress: string,
-  token: string,
-): Promise<[PublicKey, PublicKey]> => {
+  baseToken: string,
+): Promise<{
+  tokenAMint: string;
+  tokenBMint: string;
+  tokenAMeta: Tokens;
+  tokenBMeta: Tokens;
+  inTokenMint: string;
+  outTokenMint: string;
+  inTokenMeta: Tokens;
+  outTokenMeta: Tokens;
+}> => {
   const poolData = await fetch(
-    `https://amm.meteora.ag/pools?address=${poolAddress}`,
+    `https://amm-v2.meteora.ag/pools?address=${poolAddress}`,
   ).then((res) => res.json());
   const poolDetails = poolData[0];
-  const tokenList: TokenInfo[] = await fetch('https://token.jup.ag/all').then(
-    (res) => res.json(),
-  );
+  const [tokenAMint, tokenBMint] = poolDetails.pool_token_mints;
+  const [tokenAMeta, tokenBMeta]: Tokens[] = await Promise.all([
+    fetch(`https://tokens.jup.ag/token/${tokenAMint}`).then((res) =>
+      res.json(),
+    ),
+    fetch(`https://tokens.jup.ag/token/${tokenBMint}`).then((res) =>
+      res.json(),
+    ),
+  ]);
 
-  const tokenA = tokenList.find(
-    (token) => token && token.address === poolDetails.pool_token_mints[0],
-  );
-  const tokenB = tokenList.find(
-    (token) => token && token.address === poolDetails.pool_token_mints[1],
-  );
-
-  const inToken = tokenA!.address === token ? tokenB : tokenA;
-  const outToken = tokenA!.address === token ? tokenA : tokenB;
-  return [new PublicKey(inToken!.address), new PublicKey(outToken!.address)];
+  return tokenAMeta?.address === baseToken
+    ? {
+        tokenAMint: tokenAMint,
+        tokenBMint: tokenBMint,
+        tokenAMeta: tokenAMeta,
+        tokenBMeta: tokenBMeta,
+        inTokenMint: tokenBMint,
+        outTokenMint: tokenAMint,
+        inTokenMeta: tokenBMeta,
+        outTokenMeta: tokenAMeta,
+      }
+    : {
+        tokenAMint: tokenAMint,
+        tokenBMint: tokenBMint,
+        tokenAMeta: tokenAMeta,
+        tokenBMeta: tokenBMeta,
+        inTokenMint: tokenAMint,
+        outTokenMint: tokenBMint,
+        inTokenMeta: tokenAMeta,
+        outTokenMeta: tokenBMeta,
+      };
 };
