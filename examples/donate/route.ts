@@ -11,7 +11,11 @@ import {
   actionsSpecOpenApiPostResponse,
 } from '../openapi';
 import { prepareTransaction } from '../../shared/transaction-utils';
-import { ActionGetResponse, ActionPostRequest, ActionPostResponse } from '@solana/actions';
+import {
+  ActionGetResponse,
+  ActionPostRequest,
+  ActionPostResponse,
+} from '@solana/actions';
 
 const DONATION_DESTINATION_WALLET =
   '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';

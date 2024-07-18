@@ -6,6 +6,8 @@ import sanctumTrade from './sanctum/trade/route';
 import tensorBuyFloor from './tensor/buy-floor/route';
 import tensorBidNft from './tensor/bid-nft/route';
 import meteoraSwap from './meteora/swap/route';
+import memo from './memo/route';
+// import mintnft from './mint-nft/route';
 import { cors } from 'hono/cors';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
@@ -15,6 +17,8 @@ app.use('/*', cors());
 
 // <--Actions-->
 app.route('/api/donate', donate);
+app.route('/api/memo', memo);
+// app.route('/api/mint-nft', mintnft);
 app.route('/api/jupiter/swap', jupiterSwap);
 app.route('/api/helius/stake', heliusStake);
 app.route('/api/sanctum/trade', sanctumTrade);
