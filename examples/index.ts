@@ -12,7 +12,13 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 
 const app = new OpenAPIHono();
-app.use('/*', cors());
+app.use(
+  cors({
+    origin: '*',
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept-Encoding'],
+    allowMethods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+  }),
+);
 
 // <--Actions-->
 app.route('/api/donate', donate);
@@ -44,7 +50,7 @@ const port = 3000;
 console.log(
   `Server is running on port ${port}
 Visit http://localhost:${port}/swagger-ui to explore existing actions
-Visit https://actions.dialect.to to unfurl action into a Blink
+Visit https://dial.to to unfurl action into a Blink
 `,
 );
 

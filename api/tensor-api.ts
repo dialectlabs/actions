@@ -149,10 +149,8 @@ interface ListingsResponse {
   page: Page;
 }
 
-const TENSOR_API_KEY = "api-key-removed-for-security-reasons";
+const TENSOR_API_KEY = process.env.SECRET_TENSOR_API_KEY!;
 
-// 0b77397c-3600-4458-a579-72bd20bf810e
-// drip_metaverse_melodies
 export async function getNftInfo(
   mintAddress: string,
 ): Promise<TensorNft | null> {
