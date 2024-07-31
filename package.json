@@ -7,7 +7,7 @@
     "url": "https://github.com/dialectlabs/actions"
   },
   "scripts": {
-    "dev": "tsx watch examples/index.ts"
+    "dev": "tsx watch examples/hono/examples/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.12.0",
