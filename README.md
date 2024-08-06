@@ -1,17 +1,19 @@
 # @dialectlabs/actions
 
-This repository contains reference implementations of Solana Actions using [Hono](https://hono.dev/) and [Next.js](https://nextjs.org/).
+This repository contains reference implementations of Solana Actions using [Hono](https://hono.dev/), [Next.js](https://nextjs.org/), and [Express](https://expressjs.com/).
 
 ## Getting Started
 
 For Hono, run the development server in the root directory:
 
+For Next.js, run the development server in it's [directory](examples/nextjs):
+
+For Express, run the development server in the subfolder in it's [directory](examples/express):
+
 ```bash
 npm install
 npm run dev
 ```
-
-For Next.js, run the development server in it's [directory](examples/nextjs):
 
 ## Presets
 
@@ -35,6 +37,13 @@ For Next.js, run the development server in it's [directory](examples/nextjs):
 2. Build your own action
    - Create a new folder in [src/app/api/actions](examples/nextjs/src/app/api/actions) with your action name
    - Under that folder, create a route.ts file with your action
+
+### Actions Development with Express
+
+1. See [Donate Native SOL Action example](examples/express/transfer-sol/server.js)
+2. Build your own action
+   - Create a new folder in [examples/express](examples/express) with your action name
+   - Under that folder, create a server.js file with your action and make the necessary imports
 
 ### Swagger UI
 
@@ -70,6 +79,16 @@ For example, to unfurl the Donate Native SOL action, you would enter the followi
 
 `http://localhost:3000/api/actions/donate-sol`
 
+### Express
+
+There is an example action in this repository for [Donating Native SOL](examples/express/transfer-sol/server.js).
+
+To unfurl this action into Blinks on https://dial.to by entering the action URL into the Blink URL field.
+
+For example, to unfurl the Donate Native SOL action, you would enter the following URL into the Blink URL field:
+
+`http://localhost:8080/api/actions/transfer-sol`
+
 ## Learn More
 
 To learn more about Hono, take a look at the following resources:
@@ -79,3 +98,7 @@ To learn more about Hono, take a look at the following resources:
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+
+To learn more about Express, take a look at the following resources:
+
+- [Express Documentation](https://expressjs.com/en/guide/routing.html) - learn about Express features and API.
