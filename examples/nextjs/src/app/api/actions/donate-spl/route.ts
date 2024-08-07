@@ -1,14 +1,22 @@
 import {
   ActionPostResponse,
-  ACTIONS_CORS_HEADERS,
   createPostResponse,
   ActionGetResponse,
   ActionPostRequest,
-} from "@solana/actions";
-import { clusterApiUrl, Connection, PublicKey, Transaction } from "@solana/web3.js";
-import * as splToken from "@solana/spl-token";
+  createActionHeaders,
+} from '@solana/actions';
+import {
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  Transaction,
+} from '@solana/web3.js';
+import * as splToken from '@solana/spl-token';
 
-const SOLANA_MAINNET_USDC_PUBKEY = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+const SOLANA_MAINNET_USDC_PUBKEY =
+  'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
+
+const headers = createActionHeaders();
 
 export const GET = async (req: Request) => {
   try {
@@ -17,35 +25,36 @@ export const GET = async (req: Request) => {
 
     const baseHref = new URL(
       `/api/actions/donate-spl?to=${toPubkey.toBase58()}`,
-      requestUrl.origin
+      requestUrl.origin,
     ).toString();
 
     const payload: ActionGetResponse = {
-      title: "Donate USDC-SPL to Alice",
-      icon: "https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/",
-      description: "Cybersecurity Enthusiast | Support my research with a donation.",
-      label: "Donate", // this value will be ignored since `links.actions` exists
+      title: 'Donate USDC-SPL to Alice',
+      icon: 'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/',
+      description:
+        'Cybersecurity Enthusiast | Support my research with a donation.',
+      label: 'Donate', // this value will be ignored since `links.actions` exists
       links: {
         actions: [
           {
-            label: "Send 10 USDC", // button text
-            href: `${baseHref}&amount=${"10"}`,
+            label: 'Send 10 USDC', // button text
+            href: `${baseHref}&amount=${'10'}`,
           },
           {
-            label: "Send 50 USDC", // button text
-            href: `${baseHref}&amount=${"50"}`,
+            label: 'Send 50 USDC', // button text
+            href: `${baseHref}&amount=${'50'}`,
           },
           {
-            label: "Send 100 USDC", // button text
-            href: `${baseHref}&amount=${"100"}`,
+            label: 'Send 100 USDC', // button text
+            href: `${baseHref}&amount=${'100'}`,
           },
           {
-            label: "Send USDC", // button text
+            label: 'Send USDC', // button text
             href: `${baseHref}&amount={amount}`, // this href will have a text input
             parameters: [
               {
-                name: "amount", // parameter name in the `href` above
-                label: "Enter the amount of USDC to send", // placeholder of the text input
+                name: 'amount', // parameter name in the `href` above
+                label: 'Enter the amount of USDC to send', // placeholder of the text input
                 required: true,
               },
             ],
@@ -55,15 +64,15 @@ export const GET = async (req: Request) => {
     };
 
     return Response.json(payload, {
-      headers: ACTIONS_CORS_HEADERS,
+      headers,
     });
   } catch (err) {
     console.log(err);
-    let message = "An unknown error occurred";
-    if (typeof err == "string") message = err;
+    let message = 'An unknown error occurred';
+    if (typeof err == 'string') message = err;
     return new Response(message, {
       status: 400,
-      headers: ACTIONS_CORS_HEADERS,
+      headers,
     });
   }
 };
@@ -86,11 +95,11 @@ export const POST = async (req: Request) => {
     } catch (err) {
       return new Response('Invalid "account" provided', {
         status: 400,
-        headers: ACTIONS_CORS_HEADERS,
+        headers,
       });
     }
 
-    const connection = new Connection(clusterApiUrl("mainnet-beta"));
+    const connection = new Connection(clusterApiUrl('mainnet-beta'));
     const decimals = 6; // In the example, we use 6 decimals for USDC, but you can use any SPL token
     const mintAddress = new PublicKey(SOLANA_MAINNET_USDC_PUBKEY); // replace this with any SPL token mint address
 
@@ -105,7 +114,7 @@ export const POST = async (req: Request) => {
       account,
       false,
       splToken.TOKEN_PROGRAM_ID,
-      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+      splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
     );
 
     let toTokenAccount = await splToken.getAssociatedTokenAddress(
@@ -113,7 +122,7 @@ export const POST = async (req: Request) => {
       toPubkey,
       true,
       splToken.TOKEN_PROGRAM_ID,
-      splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+      splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
     );
 
     const ifexists = await connection.getAccountInfo(toTokenAccount);
@@ -127,7 +136,7 @@ export const POST = async (req: Request) => {
         toPubkey,
         mintAddress,
         splToken.TOKEN_PROGRAM_ID,
-        splToken.ASSOCIATED_TOKEN_PROGRAM_ID
+        splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
       );
       instructions.push(createATAiX);
     }
@@ -136,7 +145,7 @@ export const POST = async (req: Request) => {
       fromTokenAccount,
       toTokenAccount,
       account,
-      transferAmount
+      transferAmount,
     );
     instructions.push(transferInstruction);
 
@@ -148,7 +157,9 @@ export const POST = async (req: Request) => {
     // set the end user as the fee payer
     transaction.feePayer = account;
 
-    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    transaction.recentBlockhash = (
+      await connection.getLatestBlockhash()
+    ).blockhash;
 
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
@@ -160,39 +171,41 @@ export const POST = async (req: Request) => {
     });
 
     return Response.json(payload, {
-      headers: ACTIONS_CORS_HEADERS,
+      headers,
     });
   } catch (err) {
     console.log(err);
-    let message = "An unknown error occurred";
-    if (typeof err == "string") message = err;
+    let message = 'An unknown error occurred';
+    if (typeof err == 'string') message = err;
     return new Response(message, {
       status: 400,
-      headers: ACTIONS_CORS_HEADERS,
+      headers,
     });
   }
 };
 
 function validatedQueryParams(requestUrl: URL) {
-  let toPubkey: PublicKey = new PublicKey("FWXHZxDocgchBjADAxSuyPCVhh6fNLT7DUggabAsuz1y");
+  let toPubkey: PublicKey = new PublicKey(
+    'FWXHZxDocgchBjADAxSuyPCVhh6fNLT7DUggabAsuz1y',
+  );
   let amount: number = 10;
 
   try {
-    if (requestUrl.searchParams.get("to")) {
-      toPubkey = new PublicKey(requestUrl.searchParams.get("to")!);
+    if (requestUrl.searchParams.get('to')) {
+      toPubkey = new PublicKey(requestUrl.searchParams.get('to')!);
     }
   } catch (err) {
-    throw "Invalid input query parameter: to";
+    throw 'Invalid input query parameter: to';
   }
 
   try {
-    if (requestUrl.searchParams.get("amount")) {
-      amount = parseFloat(requestUrl.searchParams.get("amount")!);
+    if (requestUrl.searchParams.get('amount')) {
+      amount = parseFloat(requestUrl.searchParams.get('amount')!);
     }
 
-    if (amount <= 0) throw "amount is too small";
+    if (amount <= 0) throw 'amount is too small';
   } catch (err) {
-    throw "Invalid input query parameter: amount";
+    throw 'Invalid input query parameter: amount';
   }
 
   return {
