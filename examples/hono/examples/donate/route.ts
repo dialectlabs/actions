@@ -35,6 +35,7 @@ app.openapi(
     const { icon, title, description } = getDonateInfo();
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
+      type: 'action',
       icon,
       label: `${DEFAULT_DONATION_AMOUNT_SOL} SOL`,
       title,
@@ -86,6 +87,7 @@ app.openapi(
     const amount = c.req.param('amount');
     const { icon, title, description } = getDonateInfo();
     const response: ActionGetResponse = {
+      type: 'action',
       icon,
       label: `${amount} SOL`,
       title,
