@@ -29,6 +29,7 @@ export const GET = async (req: Request) => {
     ).toString();
 
     const payload: ActionGetResponse = {
+      type: 'action',
       title: 'Donate USDC-SPL to Alice',
       icon: 'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/',
       description:
