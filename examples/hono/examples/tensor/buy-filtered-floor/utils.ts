@@ -25,7 +25,7 @@ export const buildFilterInfo = (
   if(!!filters.fromPrice || !!filters.toPrice) {
     if(filters.fromPrice && filters.toPrice) info += `- priced between ${filters.fromPrice} - ${filters.toPrice} sol`
     else if (filters.fromPrice) info += `- over ${filters.fromPrice} sol`
-    else info += `- under ${filters.toPrice} SOL`;
+    else info += `- under ${filters.toPrice} sol`;
     info +="\n";
   }
   if(!!filters.fromTraitCount || !!filters.toTraitCount) {
