@@ -26,3 +26,5 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+
+examples/hono/examples/mint-nft/wallet.json

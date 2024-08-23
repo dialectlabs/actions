@@ -14,7 +14,10 @@ import {
   Transaction,
 } from '@solana/web3.js';
 
-const headers = createActionHeaders();
+const headers = createActionHeaders({
+  chainId: 'mainnet',
+  actionVersion: '2.2.1',
+});
 
 export const GET = async (req: Request) => {
   try {
@@ -22,7 +25,7 @@ export const GET = async (req: Request) => {
     const { toPubkey } = validatedQueryParams(requestUrl);
 
     const baseHref = new URL(
-      `/api/actions/donate-sol?to=${toPubkey.toBase58()}`,
+      `/api/actions/donate-sol-chaining-inline?to=${toPubkey.toBase58()}`,
       requestUrl.origin,
     ).toString();
 
@@ -36,25 +39,20 @@ export const GET = async (req: Request) => {
       links: {
         actions: [
           {
-            label: 'Send 1 SOL', // button text
-            href: `${baseHref}&amount=${'1'}`,
-          },
-          {
-            label: 'Send 5 SOL', // button text
-            href: `${baseHref}&amount=${'5'}`,
-          },
-          {
-            label: 'Send 10 SOL', // button text
-            href: `${baseHref}&amount=${'10'}`,
-          },
-          {
             label: 'Send SOL', // button text
             href: `${baseHref}&amount={amount}`, // this href will have a text input
             parameters: [
               {
+                type: 'select',
                 name: 'amount', // parameter name in the `href` above
-                label: 'Enter the amount of SOL to send', // placeholder of the text input
+                label: 'Donation Amount in SOL', // placeholder of the text input
                 required: true,
+                options: [
+                  { label: '0.01', value: '0.01' },
+                  { label: '1', value: '1' },
+                  { label: '5', value: '5' },
+                  { label: '10', value: '10' },
+                ],
               },
             ],
           },
@@ -144,6 +142,20 @@ export const POST = async (req: Request) => {
       fields: {
         transaction,
         message: `Sent ${amount} SOL to Alice: ${toPubkey.toBase58()}`,
+        links: {
+          next: {
+            type: 'inline',
+            action: {
+              type: 'action',
+              icon: 'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/',
+              label: 'Thank You!',
+              title: 'Donate SOL to Alice',
+              disabled: true,
+              description:
+                'Cybersecurity Enthusiast | Support my research with a donation.',
+            },
+          },
+        },
       },
       // note: no additional signers are needed
       // signers: [],

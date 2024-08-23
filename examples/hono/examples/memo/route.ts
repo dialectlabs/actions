@@ -33,6 +33,7 @@ app.openapi(
     const { icon, title, description } = getMemoInfo();
     const memoParameterName = 'memo';
     const response: ActionGetResponse = {
+      type: 'action',
       icon,
       label: `Send a message to Alice`,
       title,
