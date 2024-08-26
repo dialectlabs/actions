@@ -185,6 +185,21 @@ export async function getListingsByCollection(collId: string) {
   return response;
 }
 
+export async function getListingsByCollectionWithEncodedFilters(collId: string, encodedFilters: string) {
+  const response: ListingsResponse = await fetch(
+    `${baseUrl}/mint/active_listings?collId=${collId}&sortBy=ListingPriceAsc&encodedFilters=${encodedFilters}&limit=2`,
+    {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        'x-tensor-api-key': TENSOR_API_KEY,
+      },
+    },
+  ).then((response) => response.json());
+
+  return response;
+}
+
 //
 export async function findCollectionBySlug(
   slug: string,
