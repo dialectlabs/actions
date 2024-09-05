@@ -71,7 +71,7 @@ For example, to unfurl the Helius stake action, you would enter the following UR
 
 ### Next.js
 
-There are a few example actions in this repository for [Donating Native SOL](examples/nextjs/src/app/api/actions/donate-sol/route.ts) and [Donating SPL Tokens](examples/nextjs/src/app/api/actions/donate-token/route.ts).
+There are a few example actions in this repository for [Donating Native SOL](examples/nextjs/src/app/api/actions/donate-sol/route.ts) and [Donating SPL Tokens](https://github.com/dialectlabs/actions/blob/main/examples/nextjs/src/app/api/actions/donate-spl/route.ts).
 
 To unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
