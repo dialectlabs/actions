@@ -28,7 +28,7 @@ npm run dev
 1. See [Jupiter Swap Action example](examples/hono/examples/jupiter-swap/route.ts)
 2. Build your own action
    - Use specified openapi `responses` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST, GET methods
-   - Use specified openapi `body` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST methods
+   - Use the specified openapi `body` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST methods
 3. Add your router to [index.ts](examples/hono/examples/index.ts)
 
 ### Actions Development with Next.js
