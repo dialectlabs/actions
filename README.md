@@ -61,7 +61,7 @@ e.g action for swap on Jupiter using Hono: <localhost:3000/api/jupiter/swap/SOL-
 
 There is a simple donate action as well as a memo action in this repo which serves as a template for creating your own actions.
 
-There are also a few example actions in this repository for [Jupiter](examples/jupiter-swap/route.ts) (swap), [Helius](examples/helius/stake/route.ts) (stake), [Meteora](examples/meteora/swap/route.ts) (swap), [Sanctum](examples/sanctum/trade/route.ts) (stake), and [Tensor](examples/tensor) (buy floor or bid).
+There are also a few example actions in this repository for [Jupiter](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/jupiter-swap/route.ts) (swap), [Helius](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/helius/stake/route.ts) (stake), [Meteora](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/meteora/swap/route.ts) (swap), [Sanctum](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sanctum/trade/route.ts) (stake), and [Tensor](https://github.com/dialectlabs/actions/tree/main/examples/hono/examples/tensor) (buy floor or bid).
 
 You can also unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
