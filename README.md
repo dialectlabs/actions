@@ -28,7 +28,7 @@ npm run dev
 1. See [Jupiter Swap Action example](examples/hono/examples/jupiter-swap/route.ts)
 2. Build your own action
    - Use specified openapi `responses` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST, GET methods
-   - Use specified openapi `body` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST methods
+   - Use the specified openapi `body` from [openapi.ts](examples/hono/examples/openapi.ts) for your POST methods
 3. Add your router to [index.ts](examples/hono/examples/index.ts)
 
 ### Actions Development with Next.js
@@ -61,7 +61,7 @@ e.g action for swap on Jupiter using Hono: <localhost:3000/api/jupiter/swap/SOL-
 
 There is a simple donate action as well as a memo action in this repo which serves as a template for creating your own actions.
 
-There are also a few example actions in this repository for [Jupiter](examples/jupiter-swap/route.ts) (swap), [Helius](examples/helius/stake/route.ts) (stake), [Meteora](examples/meteora/swap/route.ts) (swap), [Sanctum](examples/sanctum/trade/route.ts) (stake), and [Tensor](examples/tensor) (buy floor or bid).
+There are also a few example actions in this repository for [Jupiter](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/jupiter-swap/route.ts) (swap), [Helius](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/helius/stake/route.ts) (stake), [Meteora](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/meteora/swap/route.ts) (swap), [Sanctum](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sanctum/trade/route.ts) (stake), and [Tensor](https://github.com/dialectlabs/actions/tree/main/examples/hono/examples/tensor) (buy floor or bid).
 
 You can also unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
@@ -71,7 +71,7 @@ For example, to unfurl the Helius stake action, you would enter the following UR
 
 ### Next.js
 
-There are a few example actions in this repository for [Donating Native SOL](examples/nextjs/src/app/api/actions/donate-sol/route.ts) and [Donating SPL Tokens](examples/nextjs/src/app/api/actions/donate-token/route.ts).
+There are a few example actions in this repository for [Donating Native SOL](examples/nextjs/src/app/api/actions/donate-sol/route.ts) and [Donating SPL Tokens](https://github.com/dialectlabs/actions/blob/main/examples/nextjs/src/app/api/actions/donate-spl/route.ts).
 
 To unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
