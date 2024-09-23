@@ -1,5 +1,6 @@
 import { ResponseConfig } from '@asteasolutions/zod-to-openapi/dist/openapi-registry';
 import { z } from '@hono/zod-openapi';
+import { ActionPostRequest } from '@solana/actions-spec';
 
 export const actionsSpecOpenApiGetResponse: Record<string, ResponseConfig> = {
   '200': {
@@ -38,6 +39,12 @@ export const actionsSpecOpenApiGetResponse: Record<string, ResponseConfig> = {
           // e.g. can be used together with 'disabled' to display the reason e.g. business constraint failure
           error: z.object({
             message: z.string(),
+          }).optional(),
+          dialectExperimental: z.object({
+            liveData: z.object({
+              enabled: z.boolean(),
+              delayMs: z.number().optional(),
+            }).optional(),
           }),
         }),
       },
@@ -50,6 +57,8 @@ export const actionSpecOpenApiPostRequestBody = {
     'application/json': {
       schema: z.object({
         account: z.string(),
+        data: z.map(z.string(), z.string().or(z.array(z.string()))).optional(),
+        signature: z.string().optional(),
       }),
     },
   },

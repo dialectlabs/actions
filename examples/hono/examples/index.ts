@@ -7,6 +7,8 @@ import tensorBuyFloor from './tensor/buy-floor/route';
 import tensorBuyFilteredFloor from './tensor/buy-filtered-floor/route'
 import tensorBidNft from './tensor/bid-nft/route';
 import meteoraSwap from './meteora/swap/route';
+import liveData from './live-data/route';
+import chainedBonkSwap from './chaining/route';
 import memo from './memo/route';
 import { cors } from 'hono/cors';
 import { swaggerUI } from '@hono/swagger-ui';
@@ -31,6 +33,8 @@ app.route('/api/tensor/buy-floor', tensorBuyFloor);
 app.route('/api/tensor/buy-filtered-floor', tensorBuyFilteredFloor);
 app.route('/api/tensor/bid-nft', tensorBidNft);
 app.route('/api/meteora/swap', meteoraSwap);
+app.route('/api/live-data', liveData);
+app.route('/api/chaining/swap', chainedBonkSwap);
 // </--Actions-->
 
 app.doc('/doc', {
