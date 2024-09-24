@@ -185,7 +185,10 @@ export async function getListingsByCollection(collId: string) {
   return response;
 }
 
-export async function getListingsByCollectionWithEncodedFilters(collId: string, encodedFilters: string) {
+export async function getListingsByCollectionWithEncodedFilters(
+  collId: string,
+  encodedFilters: string,
+) {
   const response: ListingsResponse = await fetch(
     `${baseUrl}/mint/active_listings?collId=${collId}&sortBy=ListingPriceAsc&encodedFilters=${encodedFilters}&limit=2`,
     {

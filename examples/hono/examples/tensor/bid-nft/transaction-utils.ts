@@ -1,29 +1,28 @@
-
-import { getNftBuyTransaction, getNftBidTransaction } from '../../../api/tensor-api';
+import {
+  getNftBuyTransaction,
+  getNftBidTransaction,
+} from '../../../api/tensor-api';
 import { connection } from '../../../shared/connection';
 
 const TENSOR_FEE_BPS = 150; // both for NFT and cNFT
 
 export async function createBidNftTransaction(
-    mintAddress: string,
-    ownerAddress: string,
-    price: number,
-    royaltyBps: number,
+  mintAddress: string,
+  ownerAddress: string,
+  price: number,
+  royaltyBps: number,
 ): Promise<string | null> {
-    const blockhash = await connection
-        .getLatestBlockhash({ commitment: 'max' })
-        .then((res) => res.blockhash);
+  const blockhash = await connection
+    .getLatestBlockhash({ commitment: 'max' })
+    .then((res) => res.blockhash);
 
-    const totalPrice = getTotalPrice(
-        price,
-        royaltyBps,
-    );
-    return getNftBidTransaction({
-        mintAddress: mintAddress,
-        ownerAddress: ownerAddress,
-        price: totalPrice,
-        latestBlockhash: blockhash,
-    });
+  const totalPrice = getTotalPrice(price, royaltyBps);
+  return getNftBidTransaction({
+    mintAddress: mintAddress,
+    ownerAddress: ownerAddress,
+    price: totalPrice,
+    latestBlockhash: blockhash,
+  });
 }
 
 export async function createBuyNftTransaction(
@@ -37,10 +36,7 @@ export async function createBuyNftTransaction(
     .getLatestBlockhash({ commitment: 'max' })
     .then((res) => res.blockhash);
 
-  const totalPrice = getTotalPrice(
-    parseInt(price, 10),
-    royaltyBps,
-  );
+  const totalPrice = getTotalPrice(parseInt(price, 10), royaltyBps);
   return getNftBuyTransaction({
     mintAddress: mint,
     ownerAddress: ownerAddress,

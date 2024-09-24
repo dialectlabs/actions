@@ -2,13 +2,13 @@ import {
   PublicKey,
   TransactionInstruction,
   TransactionMessage,
-  VersionedTransaction
+  VersionedTransaction,
 } from '@solana/web3.js';
 import { connection } from './connection';
 
 export async function prepareTransaction(
   instructions: TransactionInstruction[],
-  payer: PublicKey
+  payer: PublicKey,
 ) {
   const blockhash = await connection
     .getLatestBlockhash({ commitment: 'max' })
@@ -16,7 +16,7 @@ export async function prepareTransaction(
   const messageV0 = new TransactionMessage({
     payerKey: payer,
     recentBlockhash: blockhash,
-    instructions
+    instructions,
   }).compileToV0Message();
   return new VersionedTransaction(messageV0);
 }

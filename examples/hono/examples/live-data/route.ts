@@ -16,7 +16,8 @@ interface DialectExperimentalFeatures {
 
 const app = new OpenAPIHono();
 
-app.openapi(createRoute({
+app.openapi(
+  createRoute({
     method: 'get',
     path: '/',
     tags: ['Live Data'],

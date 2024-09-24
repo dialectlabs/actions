@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { IconBrandGithub } from "@tabler/icons-react";
+import Image from 'next/image';
+import { IconBrandGithub } from '@tabler/icons-react';
 
 export default function Home() {
   return (

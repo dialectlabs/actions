@@ -1,6 +1,5 @@
 import { ResponseConfig } from '@asteasolutions/zod-to-openapi/dist/openapi-registry';
 import { z } from '@hono/zod-openapi';
-import { ActionPostRequest } from '@solana/actions-spec';
 
 export const actionsSpecOpenApiGetResponse: Record<string, ResponseConfig> = {
   '200': {
@@ -37,14 +36,18 @@ export const actionsSpecOpenApiGetResponse: Record<string, ResponseConfig> = {
           // optional error indication for non-fatal errors, if present client should display it to the user
           // doesn't prevent client from interpreting the action or displaying it to the user
           // e.g. can be used together with 'disabled' to display the reason e.g. business constraint failure
-          error: z.object({
-            message: z.string(),
-          }).optional(),
+          error: z
+            .object({
+              message: z.string(),
+            })
+            .optional(),
           dialectExperimental: z.object({
-            liveData: z.object({
-              enabled: z.boolean(),
-              delayMs: z.number().optional(),
-            }).optional(),
+            liveData: z
+              .object({
+                enabled: z.boolean(),
+                delayMs: z.number().optional(),
+              })
+              .optional(),
           }),
         }),
       },

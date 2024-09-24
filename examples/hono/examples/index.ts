@@ -4,7 +4,7 @@ import jupiterSwap from './jupiter-swap/route';
 import heliusStake from './helius/stake/route';
 import sanctumTrade from './sanctum/trade/route';
 import tensorBuyFloor from './tensor/buy-floor/route';
-import tensorBuyFilteredFloor from './tensor/buy-filtered-floor/route'
+import tensorBuyFilteredFloor from './tensor/buy-filtered-floor/route';
 import tensorBidNft from './tensor/bid-nft/route';
 import meteoraSwap from './meteora/swap/route';
 import liveData from './live-data/route';
