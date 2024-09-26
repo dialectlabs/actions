@@ -5,41 +5,17 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import {
   findCollectionBySlug,
   getListingsByCollection,
 } from '../../../api/tensor-api';
 import { createBuyNftTransaction, getTotalPrice } from './transaction-utils';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../../openapi';
+import { Hono } from 'hono';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{collectionSlug}',
-    tags: ['Tensor Buy Floor'],
-    request: {
-      params: z.object({
-        collectionSlug: z.string().openapi({
-          param: {
-            name: 'collectionSlug',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'madlads',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:collectionSlug', async (c) => {
     const collectionSlug = c.req.param('collectionSlug');
     const collection = await findCollectionBySlug(collectionSlug);
     if (!collection) {
@@ -89,27 +65,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{collectionSlug}',
-    tags: ['Tensor Buy Floor'],
-    request: {
-      params: z.object({
-        collectionSlug: z.string().openapi({
-          param: {
-            name: 'collectionSlug',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'madlads',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:collectionSlug', async (c) => {
     const collectionSlug = c.req.param('collectionSlug');
 
     try {

@@ -1,6 +1,5 @@
 import { LstList } from 'sanctum-lst-list';
 import { LST } from 'sanctum-lst-list';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import {
   ActionError,
   ActionGetResponse,
@@ -8,40 +7,17 @@ import {
   ActionPostResponse,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../../openapi';
+import { Hono } from 'hono';
 
 const SANCTUM_ACTION_ICON =
   'https://ucarecdn.com/e75cce91-c367-4f74-9ffe-2b6d63398ce1/-/preview/880x864/-/quality/smart/-/format/auto/';
 const SWAP_AMOUNT_SOL_OPTIONS = [1, 5, 10];
 const DEFAULT_SWAP_AMOUNT_SOL = 1;
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
 // original url: https://app.sanctum.so/trade/SOL-bonkSOL
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{tokenPair}',
-    tags: ['Sanctum Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'SOL-hSOL',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/:tokenPair', (c) => {
     const tokenPair = c.req.param('tokenPair');
     const [inputToken, outputToken] = tokenPair.split('-');
 
@@ -107,38 +83,7 @@ app.openapi(
 );
 
 // original url: https://app.sanctum.so/trade/SOL-bonkSOL
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{tokenPair}/{amount}',
-    tags: ['Sanctum Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'SOL-hSOL',
-        }),
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/:tokenPair/:amount', (c) => {
     const { tokenPair, amount } = c.req.param();
     const [inputToken, outputToken] = tokenPair.split('-');
     const [inputTokenMeta, outputTokenMeta] = [
@@ -186,39 +131,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{tokenPair}/{amount}',
-    tags: ['Sanctum Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'SOL-hSOL',
-        }),
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:tokenPair/:amount?', async (c) => {
     const tokenPair = c.req.param('tokenPair');
     const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_SOL.toString();
     try {

@@ -1,5 +1,4 @@
 import { LST, LstList } from 'sanctum-lst-list';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import {
   ActionError,
   ActionGetResponse,
@@ -7,27 +6,16 @@ import {
   ActionPostResponse,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../../openapi';
+import { Hono } from 'hono';
 
 const HELIUS_ACTION_ICON =
   'https://ucarecdn.com/bb8f075a-5e6e-4b5b-ba90-8140c020e3e2/-/preview/880x880/-/quality/smart/-/format/auto/';
 const SWAP_AMOUNT_SOL_OPTIONS = [1, 5, 10];
 const DEFAULT_SWAP_AMOUNT_SOL = 1;
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/',
-    tags: ['Helius Stake'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/', (c) => {
     const [inputToken, outputToken] = ['SOL', 'hSOL'];
     const [inputTokenMeta, outputTokenMeta] = [
       LstList.find(
@@ -82,30 +70,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{amount}',
-    tags: ['Helius Stake'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: true,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/:amount', (c) => {
     const [inputToken, outputToken] = ['SOL', 'hSOL'];
     const [inputTokenMeta, outputTokenMeta] = [
       LstList.find(
@@ -141,31 +106,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{amount}',
-    tags: ['Helius Stake'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: true,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:amount?', async (c) => {
     try {
       const amount =
         c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_SOL.toString();

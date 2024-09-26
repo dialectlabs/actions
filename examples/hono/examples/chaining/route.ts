@@ -4,18 +4,13 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../openapi';
 import jupiterApi from '../../api/jupiter-api';
+import { Hono } from 'hono';
 
 const LOGO =
   'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
 const DEFAULT_SWAP_AMOUNT_USD = 10;
 
@@ -33,14 +28,7 @@ const TOKEN_DATA: Record<
 type strategy = 'next' | 'terminate';
 
 // 1st action
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/SOL-BONK',
-    tags: ['Chaining'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/SOL-BONK', async (c) => {
     const inputToken = 'SOL';
     const outputToken = 'BONK';
 
@@ -80,39 +68,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/SOL-BONK/{amount}/{strategy}',
-    tags: ['Chaining'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-        strategy: z.string().openapi({
-          param: {
-            name: 'strategy',
-            in: 'path',
-            required: true,
-          },
-          type: 'string',
-          example: 'next',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/SOL-BONK/:amount/:strategy', async (c) => {
     const inputToken = 'SOL';
     const outputToken = 'BONK';
 
@@ -127,40 +83,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/SOL-BONK/{amount}/{strategy}',
-    tags: ['Chaining'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-        strategy: z.string().openapi({
-          param: {
-            name: 'strategy',
-            in: 'path',
-            required: true,
-          },
-          type: 'string',
-          example: 'next',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.post('/SOL-BONK/:amount/:strategy', async (c) => {
     const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_USD.toString();
     const { account } = (await c.req.json()) as ActionPostRequest;
     const strategy = c.req.param('strategy');
@@ -215,43 +138,43 @@ app.openapi(
     const nextAction =
       strategy === 'next'
         ? {
-            type: 'action',
-            icon: LOGO,
-            label: `Buy ${inputToken}`,
-            title: `Buy ${inputToken}`,
-            description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
-            links: {
-              actions: [
-                {
-                  href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/next`,
-                  label: `Buy ${inputToken}`,
-                  parameters: [
-                    {
-                      name: amountParameterName,
-                      label: 'Enter a custom USD amount',
-                    },
-                  ],
-                },
-                {
-                  href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/terminate`,
-                  label: `Buy ${inputToken} (terminate)`,
-                  parameters: [
-                    {
-                      name: amountParameterName,
-                      label: 'Enter a custom USD amount',
-                    },
-                  ],
-                },
-              ],
-            },
-          }
+          type: 'action',
+          icon: LOGO,
+          label: `Buy ${inputToken}`,
+          title: `Buy ${inputToken}`,
+          description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
+          links: {
+            actions: [
+              {
+                href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/next`,
+                label: `Buy ${inputToken}`,
+                parameters: [
+                  {
+                    name: amountParameterName,
+                    label: 'Enter a custom USD amount',
+                  },
+                ],
+              },
+              {
+                href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/terminate`,
+                label: `Buy ${inputToken} (terminate)`,
+                parameters: [
+                  {
+                    name: amountParameterName,
+                    label: 'Enter a custom USD amount',
+                  },
+                ],
+              },
+            ],
+          },
+        }
         : {
-            type: 'completed',
-            icon: LOGO,
-            label: `Buy ${outputToken}`,
-            title: `Buy ${outputToken}`,
-            description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
-          };
+          type: 'completed',
+          icon: LOGO,
+          label: `Buy ${outputToken}`,
+          title: `Buy ${outputToken}`,
+          description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
+        };
     const response: ActionPostResponse = {
       transaction: swapResponse.swapTransaction,
       links: {
@@ -268,14 +191,7 @@ app.openapi(
 
 // 2-nd action
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/BONK-SOL',
-    tags: ['Chaining'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/BONK-SOL', async (c) => {
     const inputToken = 'BONK';
     const outputToken = 'SOL';
 
@@ -315,39 +231,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/BONK-SOL/{amount}/{strategy}',
-    tags: ['Chaining'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-        strategy: z.string().openapi({
-          param: {
-            name: 'strategy',
-            in: 'path',
-            required: true,
-          },
-          type: 'string',
-          example: 'next',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/BONK-SOL/:amount/:strategy', async (c) => {
     const inputToken = 'BONK';
     const outputToken = 'SOL';
 
@@ -362,40 +246,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/BONK-SOL/{amount}/{strategy}',
-    tags: ['Chaining'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-        strategy: z.string().openapi({
-          param: {
-            name: 'strategy',
-            in: 'path',
-            required: true,
-          },
-          type: 'string',
-          example: 'next',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.post('/BONK-SOL/:amount/:strategy', async (c) => {
     const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_USD.toString();
     const { account } = (await c.req.json()) as ActionPostRequest;
     const inputToken = 'BONK';
@@ -448,43 +299,43 @@ app.openapi(
     const nextAction =
       strategy === 'next'
         ? {
-            type: 'action',
-            icon: LOGO,
-            label: `Buy ${inputToken}`,
-            title: `Buy ${inputToken}`,
-            description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
-            links: {
-              actions: [
-                {
-                  href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/next`,
-                  label: `Buy ${inputToken}`,
-                  parameters: [
-                    {
-                      name: amountParameterName,
-                      label: 'Enter a custom USD amount',
-                    },
-                  ],
-                },
-                {
-                  href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/terminate`,
-                  label: `Buy ${inputToken} (terminate)`,
-                  parameters: [
-                    {
-                      name: amountParameterName,
-                      label: 'Enter a custom USD amount',
-                    },
-                  ],
-                },
-              ],
-            },
-          }
+          type: 'action',
+          icon: LOGO,
+          label: `Buy ${inputToken}`,
+          title: `Buy ${inputToken}`,
+          description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
+          links: {
+            actions: [
+              {
+                href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/next`,
+                label: `Buy ${inputToken}`,
+                parameters: [
+                  {
+                    name: amountParameterName,
+                    label: 'Enter a custom USD amount',
+                  },
+                ],
+              },
+              {
+                href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/terminate`,
+                label: `Buy ${inputToken} (terminate)`,
+                parameters: [
+                  {
+                    name: amountParameterName,
+                    label: 'Enter a custom USD amount',
+                  },
+                ],
+              },
+            ],
+          },
+        }
         : {
-            type: 'completed',
-            icon: LOGO,
-            label: `Buy ${outputToken}`,
-            title: `Buy ${outputToken}`,
-            description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
-          };
+          type: 'completed',
+          icon: LOGO,
+          label: `Buy ${outputToken}`,
+          title: `Buy ${outputToken}`,
+          description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
+        };
     const response: ActionPostResponse = {
       transaction: swapResponse.swapTransaction,
       links: {

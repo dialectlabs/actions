@@ -4,12 +4,6 @@ import {
   TransactionInstruction,
   VersionedTransaction,
 } from '@solana/web3.js';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../openapi';
 import { prepareTransaction } from '../../shared/transaction-utils';
 import {
   ActionGetResponse,
@@ -17,19 +11,13 @@ import {
   ActionPostResponse,
   MEMO_PROGRAM_ID,
 } from '@solana/actions';
+import { Hono } from 'hono';
 
 const MEMO_DESTINATION_WALLET = '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/',
-    tags: ['Memo'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/', (c) => {
     const { icon, title, description } = getMemoInfo();
     const memoParameterName = 'memo';
     const response: ActionGetResponse = {
@@ -57,31 +45,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{memo}',
-    tags: ['Memo'],
-    request: {
-      params: z.object({
-        memo: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'memo',
-              in: 'path',
-              required: false,
-            },
-            type: 'string',
-            example: 'Hello world!',
-          }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:memo?', async (c) => {
     const memo = c.req.param('memo') ?? 'Hello world!';
     const { account } = (await c.req.json()) as ActionPostRequest;
     const transaction = await prepareMemoTransaction(

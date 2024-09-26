@@ -5,7 +5,6 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import {
   findCollectionBySlug,
   getListingsByCollectionWithEncodedFilters,
@@ -13,46 +12,14 @@ import {
 import { buildFilterInfo, extractFiltersFromEncodedFilters } from './utils';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
 import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../../openapi';
-import {
   createBuyNftTransaction,
   getTotalPrice,
 } from '../buy-floor/transaction-utils';
+import { Hono } from 'hono';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{collectionSlug}/{encodedFilters}',
-    tags: ['Tensor Buy Filtered Floor'],
-    request: {
-      params: z.object({
-        collectionSlug: z.string().openapi({
-          param: {
-            name: 'collectionSlug',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'madlads',
-        }),
-        encodedFilters: z.string().openapi({
-          param: {
-            name: 'encodedFilters',
-            in: 'path',
-          },
-          type: 'string',
-          example:
-            'eyJ0cmFpdHNGaWx0ZXIiOnsiQmFjayI6WyJZZWxsb3cgS2F0YW5hIl19fQ%3D%3D',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:collectionSlug/:encodedFilters', async (c) => {
     const encodedFilters = c.req.param('encodedFilters')!;
     const collectionSlug = c.req.param('collectionSlug');
     const filters = extractFiltersFromEncodedFilters(encodedFilters);
@@ -105,7 +72,7 @@ app.openapi(
     const hasEqualFloorAssets =
       lowestListings.mints.length > 1
         ? lowestListings.mints[0].name == lowestListings.mints[1].name &&
-          lowestListings.mints[0].imageUri == lowestListings.mints[1].imageUri
+        lowestListings.mints[0].imageUri == lowestListings.mints[1].imageUri
         : false;
     const lowestListing = lowestListings.mints[0];
     const buyNowPriceNetFees = getTotalPrice(
@@ -118,54 +85,25 @@ app.openapi(
     const filterInfo = buildFilterInfo(filters, hasEqualFloorAssets);
     return hasEqualFloorAssets
       ? c.json({
-          icon: lowestListing.imageUri,
-          label: `${uiPrice} SOL`,
-          title: `Buy the floor of ${lowestListing.name}`,
-          description:
-            `${collection.name} - ${collection.description}` +
-            (filterInfo.length > 0
-              ? `\n\nAdditional Filters:\n${filterInfo}`
-              : ``),
-        } satisfies ActionGetResponse)
+        icon: lowestListing.imageUri,
+        label: `${uiPrice} SOL`,
+        title: `Buy the floor of ${lowestListing.name}`,
+        description:
+          `${collection.name} - ${collection.description}` +
+          (filterInfo.length > 0
+            ? `\n\nAdditional Filters:\n${filterInfo}`
+            : ``),
+      } satisfies ActionGetResponse)
       : c.json({
-          icon: lowestListing.imageUri,
-          label: `${uiPrice} SOL`,
-          title: `Buy a filtered floor ${collection.name}`,
-          description: `${collection.description}\n\nFilters:\n${filterInfo}`,
-        } satisfies ActionGetResponse);
+        icon: lowestListing.imageUri,
+        label: `${uiPrice} SOL`,
+        title: `Buy a filtered floor ${collection.name}`,
+        description: `${collection.description}\n\nFilters:\n${filterInfo}`,
+      } satisfies ActionGetResponse);
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{collectionSlug}/{encodedFilters}',
-    tags: ['Tensor Buy Filtered Floor'],
-    request: {
-      params: z.object({
-        collectionSlug: z.string().openapi({
-          param: {
-            name: 'collectionSlug',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'madlads',
-        }),
-        encodedFilters: z.string().openapi({
-          param: {
-            name: 'encodedFilters',
-            in: 'path',
-          },
-          type: 'string',
-          example:
-            'eyJ0cmFpdHNGaWx0ZXIiOnsiQmFjayI6WyJZZWxsb3cgS2F0YW5hIl19fQ%3D%3D',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:collectionSlug/:encodedFilters', async (c) => {
     const collectionSlug = c.req.param('collectionSlug');
     const encodedFilters = c.req.param('encodedFilters')!;
 

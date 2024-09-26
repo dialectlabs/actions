@@ -11,10 +11,9 @@ import liveData from './live-data/route';
 import chainedBonkSwap from './chaining/route';
 import memo from './memo/route';
 import { cors } from 'hono/cors';
-import { swaggerUI } from '@hono/swagger-ui';
-import { OpenAPIHono } from '@hono/zod-openapi';
+import { Hono } from 'hono';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 app.use(
   cors({
     origin: '*',
@@ -36,21 +35,6 @@ app.route('/api/meteora/swap', meteoraSwap);
 app.route('/api/live-data', liveData);
 app.route('/api/chaining/swap', chainedBonkSwap);
 // </--Actions-->
-
-app.doc('/doc', {
-  info: {
-    title: 'An API',
-    version: 'v1',
-  },
-  openapi: '3.1.0',
-});
-
-app.get(
-  '/swagger-ui',
-  swaggerUI({
-    url: '/doc',
-  }),
-);
 
 const port = 3003;
 console.log(

@@ -1,9 +1,3 @@
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../openapi';
 import jupiterApi from '../../api/jupiter-api';
 import {
   ActionError,
@@ -11,6 +5,7 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
+import { Hono } from 'hono';
 
 export const JUPITER_LOGO =
   'https://ucarecdn.com/09c80208-f27c-45dd-b716-75e1e55832c4/-/preview/1000x981/-/quality/smart/-/format/auto/';
@@ -23,28 +18,9 @@ const US_DOLLAR_FORMATTING = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{tokenPair}',
-    tags: ['Jupiter Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'USDC-SOL',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:tokenPair', async (c) => {
     const tokenPair = c.req.param('tokenPair');
 
     const [inputToken, outputToken] = tokenPair.split('-');
@@ -54,7 +30,7 @@ app.openapi(
     ]);
 
     if (!inputTokenMeta || !outputTokenMeta) {
-      return Response.json({
+      return c.json({
         icon: JUPITER_LOGO,
         label: 'Not Available',
         title: `Buy ${outputToken}`,
@@ -96,38 +72,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{tokenPair}/{amount}',
-    tags: ['Jupiter Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'USDC-SOL',
-        }),
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:tokenPair/:amount?', async (c) => {
     const { tokenPair } = c.req.param();
     const [inputToken, outputToken] = tokenPair.split('-');
     const [inputTokenMeta, outputTokenMeta] = await Promise.all([
@@ -136,7 +81,7 @@ app.openapi(
     ]);
 
     if (!inputTokenMeta || !outputTokenMeta) {
-      return Response.json({
+      return c.json({
         icon: JUPITER_LOGO,
         label: 'Not Available',
         title: `Buy ${outputToken}`,
@@ -159,39 +104,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{tokenPair}/{amount}',
-    tags: ['Jupiter Swap'],
-    request: {
-      params: z.object({
-        tokenPair: z.string().openapi({
-          param: {
-            name: 'tokenPair',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'USDC-SOL',
-        }),
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:tokenPair/:amount?', async (c) => {
     const tokenPair = c.req.param('tokenPair');
     const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_USD.toString();
     const { account } = (await c.req.json()) as ActionPostRequest;
@@ -203,7 +116,7 @@ app.openapi(
     ]);
 
     if (!inputTokenMeta || !outputTokenMeta) {
-      return Response.json(
+      return c.json(
         {
           message: `Token metadata not found.`,
         } satisfies ActionError,
@@ -217,7 +130,7 @@ app.openapi(
     ]);
     const tokenPriceUsd = tokenUsdPrices[inputTokenMeta.address];
     if (!tokenPriceUsd) {
-      return Response.json(
+      return c.json(
         {
           message: `Failed to get price for ${inputTokenMeta.symbol}.`,
         } satisfies ActionError,

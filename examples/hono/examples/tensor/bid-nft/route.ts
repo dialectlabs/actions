@@ -5,41 +5,17 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 import { findCollectionBySlug, getNftInfo } from '../../../api/tensor-api';
 import { formatTokenAmount } from '../../../shared/number-formatting-utils';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../../openapi';
 import {
   createBidNftTransaction,
   createBuyNftTransaction,
 } from './transaction-utils';
+import { Hono } from 'hono';
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{nftMint}',
-    tags: ['Tensor Bid NFT'],
-    request: {
-      params: z.object({
-        nftMint: z.string().openapi({
-          param: {
-            name: 'nftMint',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:nftMint', async (c) => {
     const nftMint = c.req.param('nftMint');
 
     const nftInfo = await getNftInfo(nftMint);
@@ -103,34 +79,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{nftMint}/{amount}',
-    tags: ['Tensor Bid NFT'],
-    request: {
-      params: z.object({
-        nftMint: z.string().openapi({
-          param: {
-            name: 'nftMint',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
-        }),
-        amount: z.string().openapi({
-          param: {
-            name: 'amount',
-            in: 'path',
-          },
-          type: 'number',
-          example: '1.35',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/:nftMint/:amount', async (c) => {
     const amount = c.req.param('amount');
     const nftMint = c.req.param('nftMint');
     const nftInfo = await getNftInfo(nftMint);
@@ -166,35 +115,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{nftMint}/{amount}',
-    tags: ['Tensor Bid NFT'],
-    request: {
-      params: z.object({
-        nftMint: z.string().openapi({
-          param: {
-            name: 'nftMint',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
-        }),
-        amount: z.string().openapi({
-          param: {
-            name: 'amount',
-            in: 'path',
-          },
-          type: 'number',
-          example: '1',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:nftMint/:amount', async (c) => {
     const nftMint = c.req.param('nftMint');
     const rawAmount = c.req.param('amount'); // something like 1.35 SOL
 
@@ -262,27 +183,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{nftMint}',
-    tags: ['Tensor Bid NFT'],
-    request: {
-      params: z.object({
-        nftMint: z.string().openapi({
-          param: {
-            name: 'nftMint',
-            in: 'path',
-          },
-          type: 'string',
-          example: 'DL4pWLrfh2wXiovZLtbjeXDYMoo6zoa7wFCVJX8qUpxw',
-        }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:nftMint', async (c) => {
     const nftMint = c.req.param('nftMint');
 
     try {

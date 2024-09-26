@@ -4,34 +4,22 @@ import {
   SystemProgram,
   VersionedTransaction,
 } from '@solana/web3.js';
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
-import {
-  actionSpecOpenApiPostRequestBody,
-  actionsSpecOpenApiGetResponse,
-  actionsSpecOpenApiPostResponse,
-} from '../openapi';
 import { prepareTransaction } from '../../shared/transaction-utils';
 import {
   ActionGetResponse,
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
+import { Hono } from 'hono';
 
 const DONATION_DESTINATION_WALLET =
   '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
 const DONATION_AMOUNT_SOL_OPTIONS = [1, 5, 10];
 const DEFAULT_DONATION_AMOUNT_SOL = 1;
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/',
-    tags: ['Donate'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/', (c) => {
     const { icon, title, description } = getDonateInfo();
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
@@ -64,26 +52,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/{amount}',
-    tags: ['Donate'],
-    request: {
-      params: z.object({
-        amount: z.string().openapi({
-          param: {
-            name: 'amount',
-            in: 'path',
-          },
-          type: 'number',
-          example: '1',
-        }),
-      }),
-    },
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  (c) => {
+app.get('/:amount', (c) => {
     const amount = c.req.param('amount');
     const { icon, title, description } = getDonateInfo();
     const response: ActionGetResponse = {
@@ -97,31 +66,7 @@ app.openapi(
   },
 );
 
-app.openapi(
-  createRoute({
-    method: 'post',
-    path: '/{amount}',
-    tags: ['Donate'],
-    request: {
-      params: z.object({
-        amount: z
-          .string()
-          .optional()
-          .openapi({
-            param: {
-              name: 'amount',
-              in: 'path',
-              required: false,
-            },
-            type: 'number',
-            example: '1',
-          }),
-      }),
-      body: actionSpecOpenApiPostRequestBody,
-    },
-    responses: actionsSpecOpenApiPostResponse,
-  }),
-  async (c) => {
+app.post('/:amount?', async (c) => {
     const amount =
       c.req.param('amount') ?? DEFAULT_DONATION_AMOUNT_SOL.toString();
     const { account } = (await c.req.json()) as ActionPostRequest;

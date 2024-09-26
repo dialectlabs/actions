@@ -1,6 +1,5 @@
 import { ActionGetResponse } from '@solana/actions';
-import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
-import { actionsSpecOpenApiGetResponse } from '../openapi';
+import { Hono } from 'hono';
 
 const LOGO =
   'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/';
@@ -14,16 +13,9 @@ interface DialectExperimentalFeatures {
   };
 }
 
-const app = new OpenAPIHono();
+const app = new Hono();
 
-app.openapi(
-  createRoute({
-    method: 'get',
-    path: '/',
-    tags: ['Live Data'],
-    responses: actionsSpecOpenApiGetResponse,
-  }),
-  async (c) => {
+app.get('/', async (c) => {
     const response: ActionGetResponse & DialectExperimentalFeatures = {
       icon: LOGO,
       label: `${getRandomInt(1, 1000)}`,
