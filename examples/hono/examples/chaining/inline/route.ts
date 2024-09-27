@@ -4,7 +4,7 @@ import {
   ActionPostRequest,
   ActionPostResponse,
 } from '@solana/actions';
-import jupiterApi from '../../api/jupiter-api';
+import jupiterApi from '../../../api/jupiter-api';
 import { Hono } from 'hono';
 
 const LOGO =
@@ -41,7 +41,7 @@ app.get('/SOL-BONK', async (c) => {
       links: {
         actions: [
           {
-            href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/next`,
+            href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
             label: `Buy ${outputToken} (chain)`,
             parameters: [
               {
@@ -51,7 +51,7 @@ app.get('/SOL-BONK', async (c) => {
             ],
           },
           {
-            href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/terminate`,
+            href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
             label: `Buy ${outputToken} (terminate)`,
             parameters: [
               {
@@ -146,7 +146,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
           links: {
             actions: [
               {
-                href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/next`,
+                href: `/api/chaining/inline/swap/BONK-SOL/{${amountParameterName}}/next`,
                 label: `Buy ${inputToken}`,
                 parameters: [
                   {
@@ -156,7 +156,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
                 ],
               },
               {
-                href: `/api/chaining/swap/BONK-SOL/{${amountParameterName}}/terminate`,
+                href: `/api/chaining/inline/swap/BONK-SOL/{${amountParameterName}}/terminate`,
                 label: `Buy ${inputToken} (terminate)`,
                 parameters: [
                   {
@@ -204,7 +204,7 @@ app.get('/BONK-SOL', async (c) => {
       links: {
         actions: [
           {
-            href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/next`,
+            href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
             label: `Buy ${outputToken} (chain)`,
             parameters: [
               {
@@ -214,7 +214,7 @@ app.get('/BONK-SOL', async (c) => {
             ],
           },
           {
-            href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/terminate`,
+            href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
             label: `Buy ${outputToken} (terminate)`,
             parameters: [
               {
@@ -307,7 +307,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
           links: {
             actions: [
               {
-                href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/next`,
+                href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
                 label: `Buy ${inputToken}`,
                 parameters: [
                   {
@@ -317,7 +317,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
                 ],
               },
               {
-                href: `/api/chaining/swap/SOL-BONK/{${amountParameterName}}/terminate`,
+                href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
                 label: `Buy ${inputToken} (terminate)`,
                 parameters: [
                   {

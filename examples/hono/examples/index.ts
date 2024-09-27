@@ -8,7 +8,8 @@ import tensorBuyFilteredFloor from './tensor/buy-filtered-floor/route';
 import tensorBidNft from './tensor/bid-nft/route';
 import meteoraSwap from './meteora/swap/route';
 import liveData from './live-data/route';
-import chainedBonkSwap from './chaining/route';
+import chainedInlineBonkSwap from './chaining/inline/route';
+import chainedPostBonkSwap from './chaining/post/route';
 import memo from './memo/route';
 import { cors } from 'hono/cors';
 import { Hono } from 'hono';
@@ -33,7 +34,8 @@ app.route('/api/tensor/buy-filtered-floor', tensorBuyFilteredFloor);
 app.route('/api/tensor/bid-nft', tensorBidNft);
 app.route('/api/meteora/swap', meteoraSwap);
 app.route('/api/live-data', liveData);
-app.route('/api/chaining/swap', chainedBonkSwap);
+app.route('/api/chaining/inline/swap', chainedInlineBonkSwap);
+app.route('/api/chaining/post/swap', chainedPostBonkSwap);
 // </--Actions-->
 
 const port = 3003;
