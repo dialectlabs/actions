@@ -46,7 +46,7 @@ export const createJupiterApi = () => {
     if (tokenIds.length === 0) {
       return {};
     }
-    const url = `https://price.jup.ag/v4/price?ids=${tokenIds.join(
+    const url = `https://price.jup.ag/v6/price?ids=${tokenIds.join(
       ',',
     )}&vsToken=SOL`;
     const response = await fetch(url);
