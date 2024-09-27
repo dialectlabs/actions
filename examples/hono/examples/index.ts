@@ -10,6 +10,8 @@ import meteoraSwap from './meteora/swap/route';
 import liveData from './live-data/route';
 import chainedInlineBonkSwap from './chaining/inline/route';
 import chainedPostBonkSwap from './chaining/post/route';
+import chainedMinimalPost from './chaining/minimal-post/route';
+import externalLink from './external-link/route';
 import memo from './memo/route';
 import { cors } from 'hono/cors';
 import { Hono } from 'hono';
@@ -36,6 +38,8 @@ app.route('/api/meteora/swap', meteoraSwap);
 app.route('/api/live-data', liveData);
 app.route('/api/chaining/inline/swap', chainedInlineBonkSwap);
 app.route('/api/chaining/post/swap', chainedPostBonkSwap);
+app.route('/api/chaining/minimal/post', chainedMinimalPost);
+app.route('/api/external-link', externalLink);
 // </--Actions-->
 
 const port = 3003;
