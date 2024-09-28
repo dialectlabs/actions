@@ -11,9 +11,10 @@
   "dependencies": {
     "@solana/actions": "^1.4.0",
     "@solana/web3.js": "^1.95.2",
+    "@solana/spl-memo": "^0.2.5",
     "@tabler/icons": "^3.11.0",
     "@tabler/icons-react": "^3.11.0",
-    "next": "14.2.5",
+    "next": "^14.2.13",
     "react": "^18",
     "react-dom": "^18"
   },
