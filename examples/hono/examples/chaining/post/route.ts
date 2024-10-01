@@ -61,7 +61,7 @@ app.get('/SOL-BONK/:amount', async (c) => {
   const inputToken = 'SOL';
   const outputToken = 'BONK';
 
-  const response: ActionGetResponse = {
+  const response: Action = {
     icon: LOGO,
     label: `Buy ${outputToken}`,
     title: `Buy ${outputToken} with ${inputToken}`,
@@ -138,7 +138,7 @@ app.post('/BONK-SOL', async (c) => {
   const outputToken = 'SOL';
 
   const amountParameterName = 'amount';
-  const response: ActionGetResponse = {
+  const response: Action = {
     icon: LOGO,
     label: `Buy ${outputToken}`,
     title: `Buy ${outputToken}`,
