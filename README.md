@@ -53,9 +53,21 @@ e.g action for swap on Jupiter using Hono: <localhost:3000/api/jupiter/swap/SOL-
 
 ### Hono
 
-There is a simple donate action as well as a memo action in this repo which serves as a template for creating your own actions.
+There is a simple [donate](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/donate/route.ts) action as well as a [memo](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/memo/route.ts) action in this repo which serves as a template for creating your own actions.
 
-There are also a few example actions in this repository for [Jupiter](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/jupiter-swap/route.ts) (swap), [Helius](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/helius/stake/route.ts) (stake), [Meteora](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/meteora/swap/route.ts) (swap), [Sanctum](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sanctum/trade/route.ts) (stake), and [Tensor](https://github.com/dialectlabs/actions/tree/main/examples/hono/examples/tensor) (buy floor or bid).
+Basic examples
+1. [Jupiter](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/jupiter-swap/route.ts) (swap)
+2. [Helius](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/helius/stake/route.ts) (stake) 
+3. [Meteora](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/meteora/swap/route.ts) (swap) 
+4. [Sanctum](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sanctum/trade/route.ts) (stake) 
+5. [Tensor](https://github.com/dialectlabs/actions/tree/main/examples/hono/examples/tensor) (buy floor or bid)
+
+Live data examples
+1. [Basic live data](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/live-data/route.ts)
+
+Action chaining examples
+1. [Inline chaining](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/chaining/inline/route.ts)
+2. [Post-request chaining](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/chaining/post/route.ts)
 
 You can also unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
