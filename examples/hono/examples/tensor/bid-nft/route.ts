@@ -165,6 +165,7 @@ app.post('/:nftMint/:amount', async (c) => {
       }
 
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: transaction,
       };
 
@@ -232,6 +233,7 @@ app.post('/:nftMint', async (c) => {
       }
 
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: transaction,
       };
 

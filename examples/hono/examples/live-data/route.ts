@@ -17,6 +17,7 @@ const app = new Hono();
 
 app.get('/', async (c) => {
     const response: ActionGetResponse & DialectExperimentalFeatures = {
+      type: 'action',
       icon: LOGO,
       label: `${getRandomInt(1, 1000)}`,
       title: `${getRandomInt(1, 1000)}`,

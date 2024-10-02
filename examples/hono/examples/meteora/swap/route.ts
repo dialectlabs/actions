@@ -5,7 +5,7 @@ import {
   ActionError,
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, LinkedAction,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
 import { USDollar } from '../../../shared/number-formatting-utils';
@@ -21,7 +21,7 @@ const app = new Hono();
 // original url: https://app.meteora.ag/dlmm/Gu6QyuQHvssuHhLcRRjeuJtYWKdZbV6e4kngsJRekNaM
 app.get('/:poolAddress', async (c) => {
     const poolAddress = c.req.param('poolAddress');
-    const { token, referrer } = c.req.valid('query');
+    const { token, referrer } = c.req.query();
 
     const [inputToken, outputToken] = await getTokenPair(poolAddress, token);
 
@@ -51,6 +51,7 @@ app.get('/:poolAddress', async (c) => {
 
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
+      type: 'action',
       icon: METEORA_ACTION_ICON,
       label: `Buy ${outputTokenMeta.symbol}`,
       title: `Buy ${outputTokenMeta.symbol}`,
@@ -58,10 +59,12 @@ app.get('/:poolAddress', async (c) => {
       links: {
         actions: [
           ...SWAP_AMOUNT_USD_OPTIONS.map((amount) => ({
+            type: 'transaction',
             label: `${USDollar.format(amount)}`,
             href: `/api/meteora/swap/${poolAddress}/${amount}?token=${token}&referrer=${referrer || ''}`,
-          })),
+          } satisfies LinkedAction)),
           {
+            type: 'transaction',
             href: `/api/meteora/swap/${poolAddress}/{${amountParameterName}}?token=${token}&referrer=${referrer || ''}`,
             label: `Buy ${outputTokenMeta.symbol}`,
             parameters: [
@@ -70,7 +73,7 @@ app.get('/:poolAddress', async (c) => {
                 label: 'Enter a custom USD amount',
               },
             ],
-          },
+          } satisfies LinkedAction,
         ],
       },
     };
@@ -81,7 +84,7 @@ app.get('/:poolAddress', async (c) => {
 
 app.get('/:poolAddress/:amount', async (c) => {
     const poolAddress = c.req.param('poolAddress');
-    const { token } = c.req.valid('query');
+    const { token }  = c.req.query();
 
     const [inputToken, outputToken] = await getTokenPair(poolAddress, token);
 
@@ -110,6 +113,7 @@ app.get('/:poolAddress/:amount', async (c) => {
     }
 
     const response: ActionGetResponse = {
+      type: 'action',
       icon: METEORA_ACTION_ICON,
       label: `Buy ${outputTokenMeta.symbol}`,
       title: `Buy ${outputTokenMeta.symbol} with ${inputTokenMeta.symbol}`,
@@ -122,8 +126,8 @@ app.get('/:poolAddress/:amount', async (c) => {
 
 app.post('/:poolAddress/:amount?', async (c) => {
     const poolAddress = c.req.param('poolAddress');
-    const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_USD;
-    const { token, referrer } = c.req.valid('query');
+    const amount = c.req.param('amount') ?? DEFAULT_SWAP_AMOUNT_USD.toString();
+    const { token, referrer } = c.req.query();
     try {
       const { account } = (await c.req.json()) as ActionPostRequest;
 
@@ -184,6 +188,7 @@ app.post('/:poolAddress/:amount?', async (c) => {
         referrer,
       );
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: Buffer.from(
           transaction.serialize({ verifySignatures: false }),
         ).toString(`base64`),

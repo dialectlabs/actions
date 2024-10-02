@@ -4,7 +4,7 @@ import {
   ActionError,
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, LinkedAction,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
 import { Hono } from 'hono';
@@ -54,6 +54,7 @@ app.get('/:tokenPair', (c) => {
 
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
+      type: 'action',
       icon: SANCTUM_ACTION_ICON,
       label: `Buy ${outputTokenMeta.symbol}`,
       title: `Buy ${outputTokenMeta.symbol}`,
@@ -61,10 +62,12 @@ app.get('/:tokenPair', (c) => {
       links: {
         actions: [
           ...SWAP_AMOUNT_SOL_OPTIONS.map((amount) => ({
+            type: 'transaction',
             label: `${amount} SOL`,
             href: `/api/sanctum/trade/${tokenPair}/${amount}`,
-          })),
+          } satisfies LinkedAction)),
           {
+            type: 'transaction',
             href: `/api/sanctum/trade/${tokenPair}/{${amountParameterName}}`,
             label: `Buy ${outputTokenMeta.symbol}`,
             parameters: [
@@ -73,7 +76,7 @@ app.get('/:tokenPair', (c) => {
                 label: 'Enter a SOL amount',
               },
             ],
-          },
+          } satisfies LinkedAction,
         ],
       },
     };
@@ -183,6 +186,7 @@ app.post('/:tokenPair/:amount?', async (c) => {
         },
       });
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: swapResponse.swapTransaction,
       };
       return c.json(response);

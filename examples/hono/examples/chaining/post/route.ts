@@ -62,6 +62,7 @@ app.get('/SOL-BONK/:amount', async (c) => {
   const outputToken = 'BONK';
 
   const response: Action = {
+    type: 'action',
     icon: LOGO,
     label: `Buy ${outputToken}`,
     title: `Buy ${outputToken} with ${inputToken}`,
@@ -122,6 +123,7 @@ app.post('/SOL-BONK/:amount', async (c) => {
     },
   });
   const response: ActionPostResponse = {
+    type: 'transaction',
     transaction: swapResponse.swapTransaction,
     links: {
       next: {
@@ -139,6 +141,7 @@ app.post('/BONK-SOL', async (c) => {
 
   const amountParameterName = 'amount';
   const response: Action = {
+    type: 'action',
     icon: LOGO,
     label: `Buy ${outputToken}`,
     title: `Buy ${outputToken}`,

@@ -39,6 +39,7 @@ export const GET = async (req: Request) => {
       links: {
         actions: [
           {
+            type: 'transaction',
             label: 'Send SOL', // button text
             href: `${baseHref}&amount={amount}`, // this href will have a text input
             parameters: [
@@ -140,6 +141,7 @@ export const POST = async (req: Request) => {
 
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
+        type: 'transaction',
         transaction,
         message: `Sent ${amount} SOL to Alice: ${toPubkey.toBase58()}`,
         links: {

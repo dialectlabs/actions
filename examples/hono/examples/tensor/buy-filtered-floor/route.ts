@@ -144,6 +144,7 @@ app.post('/:collectionSlug/:encodedFilters', async (c) => {
       }
 
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: transaction,
       };
 

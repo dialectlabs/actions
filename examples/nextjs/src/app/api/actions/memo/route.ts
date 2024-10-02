@@ -76,6 +76,7 @@ export const POST = async (req: Request) => {
 
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
+        type: 'transaction',
         transaction,
         message: 'Post this memo on-chain',
       },

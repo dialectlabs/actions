@@ -3,7 +3,7 @@ import {
   ActionError,
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, LinkedAction,
 } from '@solana/actions';
 import { Hono } from 'hono';
 
@@ -44,6 +44,7 @@ app.get('/:tokenPair', async (c) => {
 
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
+      type: 'action',
       icon: JUPITER_LOGO,
       label: `Buy ${outputTokenMeta.symbol}`,
       title: `Buy ${outputTokenMeta.symbol}`,
@@ -51,10 +52,12 @@ app.get('/:tokenPair', async (c) => {
       links: {
         actions: [
           ...SWAP_AMOUNT_USD_OPTIONS.map((amount) => ({
+            type: 'transaction',
             label: `${US_DOLLAR_FORMATTING.format(amount)}`,
             href: `/api/jupiter/swap/${tokenPair}/${amount}`,
-          })),
+          } satisfies LinkedAction)),
           {
+            type: 'transaction',
             href: `/api/jupiter/swap/${tokenPair}/{${amountParameterName}}`,
             label: `Buy ${outputTokenMeta.symbol}`,
             parameters: [
@@ -63,7 +66,7 @@ app.get('/:tokenPair', async (c) => {
                 label: 'Enter a custom USD amount',
               },
             ],
-          },
+          } satisfies LinkedAction,
         ],
       },
     };
@@ -166,6 +169,7 @@ app.post('/:tokenPair/:amount?', async (c) => {
       },
     });
     const response: ActionPostResponse = {
+      type: 'transaction',
       transaction: swapResponse.swapTransaction,
     };
     return c.json(response);

@@ -1,8 +1,9 @@
 import {
+  Action,
   ActionError,
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, CompletedAction,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
 import { Hono } from 'hono';
@@ -41,6 +42,7 @@ app.get('/SOL-BONK', async (c) => {
       links: {
         actions: [
           {
+            type: 'transaction',
             href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
             label: `Buy ${outputToken} (chain)`,
             parameters: [
@@ -51,6 +53,7 @@ app.get('/SOL-BONK', async (c) => {
             ],
           },
           {
+            type: 'transaction',
             href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
             label: `Buy ${outputToken} (terminate)`,
             parameters: [
@@ -135,7 +138,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
       },
     });
     const amountParameterName = 'amount';
-    const nextAction =
+    const nextAction: Action | CompletedAction =
       strategy === 'next'
         ? {
           type: 'action',
@@ -146,6 +149,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
           links: {
             actions: [
               {
+                type: 'transaction',
                 href: `/api/chaining/inline/swap/BONK-SOL/{${amountParameterName}}/next`,
                 label: `Buy ${inputToken}`,
                 parameters: [
@@ -156,6 +160,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
                 ],
               },
               {
+                type: 'transaction',
                 href: `/api/chaining/inline/swap/BONK-SOL/{${amountParameterName}}/terminate`,
                 label: `Buy ${inputToken} (terminate)`,
                 parameters: [
@@ -176,6 +181,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
           description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
         };
     const response: ActionPostResponse = {
+      type: 'transaction',
       transaction: swapResponse.swapTransaction,
       links: {
         next: {
@@ -204,6 +210,7 @@ app.get('/BONK-SOL', async (c) => {
       links: {
         actions: [
           {
+            type: 'transaction',
             href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
             label: `Buy ${outputToken} (chain)`,
             parameters: [
@@ -214,6 +221,7 @@ app.get('/BONK-SOL', async (c) => {
             ],
           },
           {
+            type: 'transaction',
             href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
             label: `Buy ${outputToken} (terminate)`,
             parameters: [
@@ -296,7 +304,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
       },
     });
     const amountParameterName = 'amount';
-    const nextAction =
+    const nextAction: Action | CompletedAction =
       strategy === 'next'
         ? {
           type: 'action',
@@ -307,6 +315,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
           links: {
             actions: [
               {
+                type: 'transaction',
                 href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/next`,
                 label: `Buy ${inputToken}`,
                 parameters: [
@@ -317,6 +326,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
                 ],
               },
               {
+                type: 'transaction',
                 href: `/api/chaining/inline/swap/SOL-BONK/{${amountParameterName}}/terminate`,
                 label: `Buy ${inputToken} (terminate)`,
                 parameters: [
@@ -337,6 +347,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
           description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
         };
     const response: ActionPostResponse = {
+      type: 'transaction',
       transaction: swapResponse.swapTransaction,
       links: {
         next: {

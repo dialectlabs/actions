@@ -8,9 +8,10 @@ import { prepareTransaction } from '../../shared/transaction-utils';
 import {
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, LinkedAction,
 } from '@solana/actions';
 import { Hono } from 'hono';
+import { LinkedActionType } from '@solana/actions-spec';
 
 const DONATION_DESTINATION_WALLET =
   '3h4AtoLTh3bWwaLhdtgQtcC3a3Tokb8NJbtqR9rhp7p6';
@@ -31,10 +32,12 @@ app.get('/', (c) => {
       links: {
         actions: [
           ...DONATION_AMOUNT_SOL_OPTIONS.map((amount) => ({
+            type: 'transaction',
             label: `${amount} SOL`,
             href: `/api/donate/${amount}`,
-          })),
+          } satisfies LinkedAction)),
           {
+            type: 'transaction',
             href: `/api/donate/{${amountParameterName}}`,
             label: 'Donate',
             parameters: [
@@ -43,7 +46,7 @@ app.get('/', (c) => {
                 label: 'Enter a custom SOL amount',
               },
             ],
-          },
+          } satisfies LinkedAction,
         ],
       },
     };
@@ -78,6 +81,7 @@ app.post('/:amount?', async (c) => {
       parsedAmount * LAMPORTS_PER_SOL,
     );
     const response: ActionPostResponse = {
+      type: 'transaction',
       transaction: Buffer.from(transaction.serialize()).toString('base64'),
     };
     return c.json(response, 200);
@@ -95,6 +99,7 @@ function getDonateInfo(): Pick<
     'Cybersecurity Enthusiast | Support my research with a donation.';
   return { icon, title, description };
 }
+
 async function prepareDonateTransaction(
   sender: PublicKey,
   recipient: PublicKey,

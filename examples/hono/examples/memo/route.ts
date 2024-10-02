@@ -29,6 +29,7 @@ app.get('/', (c) => {
       links: {
         actions: [
           {
+            type: 'transaction',
             href: `/api/memo/{${memoParameterName}}`,
             label: 'Send a message',
             parameters: [
@@ -55,6 +56,7 @@ app.post('/:memo?', async (c) => {
     );
 
     const response: ActionPostResponse = {
+      type: 'transaction',
       transaction: Buffer.from(transaction.serialize()).toString('base64'),
       message: `Sent a message to Alice: ${memo}`,
     };

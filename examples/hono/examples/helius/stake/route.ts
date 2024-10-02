@@ -3,7 +3,7 @@ import {
   ActionError,
   ActionGetResponse,
   ActionPostRequest,
-  ActionPostResponse,
+  ActionPostResponse, LinkedAction,
 } from '@solana/actions';
 import jupiterApi from '../../../api/jupiter-api';
 import { Hono } from 'hono';
@@ -49,10 +49,12 @@ app.get('/', (c) => {
       links: {
         actions: [
           ...SWAP_AMOUNT_SOL_OPTIONS.map((amount) => ({
+            type: 'transaction',
             label: `${amount} SOL`,
             href: `/api/helius/stake/${amount}`,
-          })),
+          } satisfies LinkedAction)),
           {
+            type: 'transaction',
             href: `/api/helius/stake/{${amountParameterName}}`,
             label: `Buy ${outputTokenMeta.symbol}`,
             parameters: [
@@ -61,7 +63,7 @@ app.get('/', (c) => {
                 label: 'Enter a SOL amount',
               },
             ],
-          },
+          } satisfies LinkedAction,
         ],
       },
     };
@@ -158,6 +160,7 @@ app.post('/:amount?', async (c) => {
         },
       });
       const response: ActionPostResponse = {
+        type: 'transaction',
         transaction: swapResponse.swapTransaction,
       };
       return c.json(response);
