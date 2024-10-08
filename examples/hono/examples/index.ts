@@ -45,7 +45,6 @@ app.route('/api/external-link', externalLink);
 const port = 3003;
 console.log(
   `Server is running on port ${port}
-Visit http://localhost:${port}/swagger-ui to explore existing actions
 Visit https://dial.to to unfurl action into a Blink
 `,
 );

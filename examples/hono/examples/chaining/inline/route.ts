@@ -8,8 +8,8 @@ import {
 import jupiterApi from '../../../api/jupiter-api';
 import { Hono } from 'hono';
 
-const LOGO =
-  'https://ucarecdn.com/7aa46c85-08a4-4bc7-9376-88ec48bb1f43/-/preview/880x864/-/quality/smart/-/format/auto/';
+const SOL_BONK_LOGO = 'https://ucarecdn.com/a1dacc03-ec1b-43a9-a492-1c549291b55a/-/preview/880x582/';
+const BONK_SOL_LOGO = 'https://ucarecdn.com/f86fb716-bd20-4865-95b8-fb4599ec74c5/-/preview/880x582/';
 
 const app = new Hono();
 
@@ -35,7 +35,7 @@ app.get('/SOL-BONK', async (c) => {
 
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
-      icon: LOGO,
+      icon: SOL_BONK_LOGO,
       label: `Buy ${outputToken}`,
       title: `Buy ${outputToken}`,
       description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
@@ -76,7 +76,7 @@ app.get('/SOL-BONK/:amount/:strategy', async (c) => {
     const outputToken = 'BONK';
 
     const response: ActionGetResponse = {
-      icon: LOGO,
+      icon: SOL_BONK_LOGO,
       label: `Buy ${outputToken}`,
       title: `Buy ${outputToken} with ${inputToken}`,
       description: `Buy ${outputToken} with ${inputToken}.`,
@@ -142,7 +142,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
       strategy === 'next'
         ? {
           type: 'action',
-          icon: LOGO,
+          icon: BONK_SOL_LOGO,
           label: `Buy ${inputToken}`,
           title: `Buy ${inputToken}`,
           description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
@@ -175,7 +175,7 @@ app.post('/SOL-BONK/:amount/:strategy', async (c) => {
         }
         : {
           type: 'completed',
-          icon: LOGO,
+          icon: SOL_BONK_LOGO,
           label: `Buy ${outputToken}`,
           title: `Buy ${outputToken}`,
           description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
@@ -203,7 +203,7 @@ app.get('/BONK-SOL', async (c) => {
 
     const amountParameterName = 'amount';
     const response: ActionGetResponse = {
-      icon: LOGO,
+      icon: BONK_SOL_LOGO,
       label: `Buy ${outputToken}`,
       title: `Buy ${outputToken}`,
       description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
@@ -244,7 +244,7 @@ app.get('/BONK-SOL/:amount/:strategy', async (c) => {
     const outputToken = 'SOL';
 
     const response: ActionGetResponse = {
-      icon: LOGO,
+      icon: BONK_SOL_LOGO,
       label: `Buy ${outputToken}`,
       title: `Buy ${outputToken} with ${inputToken}`,
       description: `Buy ${outputToken} with ${inputToken}.`,
@@ -308,7 +308,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
       strategy === 'next'
         ? {
           type: 'action',
-          icon: LOGO,
+          icon: SOL_BONK_LOGO,
           label: `Buy ${inputToken}`,
           title: `Buy ${inputToken}`,
           description: `Buy ${inputToken} with ${outputToken}. Choose a USD amount of ${outputToken} from the options below, or enter a custom amount.`,
@@ -341,7 +341,7 @@ app.post('/BONK-SOL/:amount/:strategy', async (c) => {
         }
         : {
           type: 'completed',
-          icon: LOGO,
+          icon: BONK_SOL_LOGO,
           label: `Buy ${outputToken}`,
           title: `Buy ${outputToken}`,
           description: `Buy ${outputToken} with ${inputToken}. Choose a USD amount of ${inputToken} from the options below, or enter a custom amount.`,
