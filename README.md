@@ -69,6 +69,12 @@ Action chaining examples
 1. [Inline chaining](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/chaining/inline/route.ts)
 2. [Post-request chaining](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/chaining/post/route.ts)
 
+External link examples
+1. [External link](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/external-link/route.ts)
+
+Sign message examples
+1. [Sign message](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sign-message/route.ts)
+
 You can also unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
 For example, to unfurl the Helius stake action, you would enter the following URL into the Blink URL field:
