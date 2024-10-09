@@ -16,8 +16,8 @@ app.get('/', async (c) => {
     type: 'action',
     icon: LOGO,
     title: 'External link',
-    label: 'Externl link',
-    description: 'Externl link example',
+    label: 'External link',
+    description: 'External link example',
     links: {
       actions: [
         {
