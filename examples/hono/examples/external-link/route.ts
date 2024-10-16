@@ -51,7 +51,7 @@ app.post('/link', async (c) => {
 
 app.post('/tweet', async (c) => {
   const tweetText = c.req.query('text');
-  console.log('tweetText', tweetText);
+
   return c.json({
     type: 'external-link',
     externalLink: `https://twitter.com/intent/tweet?text=${tweetText}`,
