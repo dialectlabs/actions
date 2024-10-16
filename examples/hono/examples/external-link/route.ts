@@ -25,6 +25,18 @@ app.get('/', async (c) => {
           label: 'Open website',
           href: '/api/external-link/link',
         },
+        {
+          type: 'external-link',
+          label: 'Draft tweet',
+          href: '/api/external-link/tweet?text={tweetText}',
+          parameters: [
+            {
+              name: 'tweetText',
+              type: 'text',
+              label: 'Tweet text',
+            },
+          ],
+        },
       ],
     },
   } satisfies ActionGetResponse);
@@ -34,6 +46,15 @@ app.post('/link', async (c) => {
   return c.json({
     type: 'external-link',
     externalLink: 'https://dialect.to/',
+  } satisfies ActionPostResponse);
+});
+
+app.post('/tweet', async (c) => {
+  const tweetText = c.req.query('text');
+  console.log('tweetText', tweetText);
+  return c.json({
+    type: 'external-link',
+    externalLink: `https://twitter.com/intent/tweet?text=${tweetText}`,
   } satisfies ActionPostResponse);
 });
 
