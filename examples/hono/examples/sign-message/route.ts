@@ -41,12 +41,12 @@ const signMessageAction = {
     actions: [
       {
         type: 'message',
-        href: '/sign-plain',
+        href: '/api/sign-message/sign-plain',
         label: 'Sign plain',
       },
       {
         type: 'message',
-        href: '/sign-structured',
+        href: '/api/sign-message/sign-structured',
         label: 'Sign structured',
       },
     ],
@@ -64,7 +64,7 @@ app.post('/sign-plain', async (c) => {
     links: {
       next: {
         type: 'post',
-        href: '/sign-plain/verify-signature',
+        href: '/api/sign-message/sign-plain/verify-signature',
       },
     },
   };
@@ -115,7 +115,7 @@ app.post('/sign-structured', async (c) => {
   // 1. Generate sign message data
   const signMessageData: SignMessageData = {
     address: account,
-    domain: 'localhost:3000', // In real world should be the domain of the action server
+    domain: 'localhost:3003', // In real world should be the domain of the action server
     statement: 'This is example structured statement',
     issuedAt: new Date().toISOString(),
     nonce: Keypair.generate().publicKey.toString(),
@@ -142,7 +142,7 @@ app.post('/sign-structured', async (c) => {
     links: {
       next: {
         type: 'post',
-        href: '/sign-structured/verify-signature',
+        href: '/api/sign-message/sign-structured/verify-signature',
       },
     },
   };
