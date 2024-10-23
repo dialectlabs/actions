@@ -23,6 +23,14 @@ npm run dev
 
 ## How To
 
+### Unfurl Action Into a Blink
+
+To unfurl your action, open
+[https://dialect.to/](https://dialect.to/).
+
+For example, if you have the Hono server running, you can input
+`localhost:3003/api/jupiter/swap/SOL-Bonk`.
+
 ### Actions Development with Hono
 
 1. See [Jupiter Swap Action example](examples/hono/examples/jupiter-swap/route.ts)
@@ -42,12 +50,6 @@ npm run dev
 2. Build your own action
    - Create a new folder in [examples/express](examples/express) with your action name
    - Under that folder, create a server.js file with your action and make the necessary imports
-
-### Unfurl action into a Blink
-
-To check and unfurl your or existing action open
-[https://actions.dialect.to/](https://actions.dialect.to/)  
-e.g action for swap on Jupiter using Hono: <localhost:3000/api/jupiter/swap/SOL-Bonk>
 
 ## Examples in this repo
 
