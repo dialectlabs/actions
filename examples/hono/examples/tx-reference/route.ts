@@ -1,7 +1,13 @@
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram } from '@solana/web3.js';
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SystemProgram,
+} from '@solana/web3.js';
 import { prepareTransaction } from '../../shared/transaction-utils';
 import { Action, ActionPostRequest } from '@solana/actions';
 import { Hono } from 'hono';
+import { DialectTransactionResponse } from '../../shared/actions-sdk/action-spec-types';
 import { TransactionResponse } from '@solana/actions-spec';
 
 const DONATION_DESTINATION_WALLET =
@@ -30,10 +36,15 @@ app.post('/', async (c) => {
     toPubkey: new PublicKey(DONATION_DESTINATION_WALLET),
     lamports: DEFAULT_DONATION_AMOUNT_SOL * LAMPORTS_PER_SOL,
   });
+  const reference = Keypair.generate().publicKey; // 1. Generate unique reference
+  ix.keys.push({ pubkey: reference, isSigner: false, isWritable: false }); // 2. Include reference in tx instruction
   const transaction = await prepareTransaction([ix], payer);
-  const response: TransactionResponse = {
+  const response: TransactionResponse & {
+    dialectExperimental: { reference: string };
+  } = {
     type: 'transaction',
     transaction: Buffer.from(transaction.serialize()).toString('base64'),
+    dialectExperimental: { reference: reference.toString() }, // 3. Include reference in response
   };
   return c.json(response, 200);
 });
