@@ -2,6 +2,11 @@ import { Keypair, PublicKey, TransactionInstruction } from '@solana/web3.js';
 
 export const REFERENCE_DATA = 'blink';
 
+/**
+ * Generate a reference blink instruction
+ * @param ref optional existing unique reference public key to be used
+ * @returns unique reference public key and instruction
+ */
 export function generateBlinkReferenceIx(ref?: PublicKey): {
   reference: PublicKey;
   referenceIx: TransactionInstruction;
