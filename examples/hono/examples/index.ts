@@ -13,6 +13,7 @@ import chainedPostBonkSwap from './chaining/post/route';
 import chainedMinimalPost from './chaining/minimal-post/route';
 import externalLink from './external-link/route';
 import signMessage from './sign-message/route';
+import txReference from './tx-reference/route'
 import memo from './memo/route';
 import { cors } from 'hono/cors';
 import { Hono } from 'hono';
@@ -43,6 +44,7 @@ app.route('/api/chaining/minimal/post', chainedMinimalPost);
 app.route('/api/external-link', externalLink);
 app.route('/api/external-link', externalLink);
 app.route('/api/sign-message', signMessage);
+app.route('/api/tx-reference', txReference);
 // </--Actions-->
 
 const port = 3003;

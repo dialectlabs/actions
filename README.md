@@ -75,6 +75,9 @@ External link examples
 Sign message examples
 1. [Sign message](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/sign-message/route.ts)
 
+Transaction reference examples
+1. [Donate with tx reference](https://github.com/dialectlabs/actions/blob/main/examples/hono/examples/tx-reference/route.ts)
+
 You can also unfurl these actions into Blinks on https://dial.to by entering the action URL into the Blink URL field.
 
 For example, to unfurl the Helius stake action, you would enter the following URL into the Blink URL field:
