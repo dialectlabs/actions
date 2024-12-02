@@ -46,7 +46,7 @@ npm run dev
 ### Unfurl action into a Blink
 
 To check and unfurl your or existing action open
-[https://actions.dialect.to/](https://actions.dialect.to/)  
+[https://dial.to/](https://dial.to/)  
 e.g action for swap on Jupiter using Hono: <localhost:3000/api/jupiter/swap/SOL-Bonk>
 
 ## Examples in this repo
